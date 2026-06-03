@@ -1,24 +1,9 @@
 "use client";
 
 import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type ChatResponse, modelLabel, type Source, sourceTypeLabel } from "@/lib/chat-response-view";
 import { dapaHomepageSections } from "@/lib/dapa-homepage-sections";
 import { dapaOfficialNavMenus, type DapaNavMenu } from "@/lib/dapa-nav-data";
-
-type Source = {
-  type: "FILE" | "API" | "SECTION" | "HOMEPAGE";
-  title: string;
-  source: string;
-  section?: string;
-  modified?: string;
-  score: number;
-};
-
-type ChatResponse = {
-  answer?: unknown;
-  sources?: unknown;
-  message?: unknown;
-  error?: unknown;
-};
 
 const navItems = [{ title: "AI 통합검색", href: "#ai-search" }, ...dapaOfficialNavMenus] as const;
 const searchChips = [
@@ -58,19 +43,13 @@ const sourceGroups = [
   { title: "공공 API", items: ["공공데이터 인벤토리", "법령정보 API", "원문 링크", "스냅샷 fallback"] }
 ] as const;
 
-function sourceTypeLabel(type: Source["type"]) {
-  if (type === "FILE") return "데이터셋";
-  if (type === "API") return "공공 API";
-  if (type === "HOMEPAGE") return "공식 홈페이지";
-  return "공개 섹션";
-}
-
 export default function Home() {
   const [message, setMessage] = useState("");
   const [section, setSection] = useState("");
   const [activeMenu, setActiveMenu] = useState<DapaNavMenu | null>(dapaOfficialNavMenus[0] ?? null);
   const [answer, setAnswer] = useState("");
   const [sources, setSources] = useState<Source[]>([]);
+  const [model, setModel] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSources, setShowSources] = useState(false);
@@ -92,6 +71,7 @@ export default function Home() {
     setError("");
     setAnswer("");
     setSources([]);
+    setModel("");
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -107,6 +87,7 @@ export default function Home() {
       if (typeof data.answer !== "string") throw new Error("응답 형식이 올바르지 않습니다.");
       setAnswer(data.answer);
       setSources(Array.isArray(data.sources) ? (data.sources as Source[]) : []);
+      setModel(modelLabel(data.model));
     } catch (err) {
       if (requestId !== requestIdRef.current) return;
       setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
@@ -217,15 +198,15 @@ export default function Home() {
 
       {(loading || error || answer) && (
         <section className="answerPanel" aria-live="polite">
-          <div><strong>{loading ? "AI가 공개 데이터를 검색하고 있습니다." : "AI 요약 결과"}</strong><span>홈페이지 {sourceSummary.homepage} · FILE {sourceSummary.file} · API {sourceSummary.api}</span></div>
+          <div><strong>{loading ? "AI가 공개 데이터를 검색하고 있습니다." : "AI 검색 결과"}</strong><span>모델 {model || "Ollama"} · 홈페이지 {sourceSummary.homepage} · FILE {sourceSummary.file} · API {sourceSummary.api}</span></div>
           {error ? <p className="errorText">{error}</p> : <p>{answer}</p>}
           {sources.length > 0 && (
             <ul className="answerSources" aria-label="AI 답변 출처">
               {sources.slice(0, 5).map((source) => (
                 <li key={`${source.type}-${source.title}-${source.score}`}>
                   <b>{sourceTypeLabel(source.type)}</b>
-                  <span>{source.title}</span>
-                  <small>{source.section ? `${source.section} · ` : ""}{source.source}</small>
+                  {source.sourceUrl ? <a className="sourceTitleLink" href={source.sourceUrl} target="_blank" rel="noreferrer">{source.title}</a> : <span>{source.title}</span>}
+                  <small>{source.section ? `${source.section} · ` : ""}{source.sourceUrl ? <a href={source.sourceUrl} target="_blank" rel="noreferrer">{source.source}</a> : source.source}</small>
                 </li>
               ))}
             </ul>

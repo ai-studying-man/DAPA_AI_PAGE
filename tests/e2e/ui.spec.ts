@@ -38,9 +38,13 @@ test.describe("public landing", () => {
     await page.getByRole("button", { name: "방산중소기업 지원" }).click();
 
     const resultPanel = page.locator(".answerPanel");
-    await expect(resultPanel).toContainText("AI 요약 결과");
+    await expect(resultPanel).toContainText("AI 검색 결과");
+    await expect(resultPanel).toContainText("모델 ollama · qwen3.5:4b");
+    await expect(resultPanel).toContainText("질문 이해");
+    await expect(resultPanel).toContainText("Reasoning/근거 판단");
     await expect(resultPanel).toContainText("방위사업청 국내조달 조달계획");
     await expect(resultPanel).toContainText(/홈페이지 \d+ · FILE \d+ · API \d+/);
+    await expect(resultPanel.getByRole("link", { name: /방산 중소기업과 업체/ })).toHaveAttribute("href", /https:\/\/www\.dapa\.go\.kr/);
   });
 
   test("opens the source reference panel without requiring search execution", async ({ page }) => {

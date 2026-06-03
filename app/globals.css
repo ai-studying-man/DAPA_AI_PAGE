@@ -805,7 +805,8 @@ input:focus-visible {
   font-size: 12px;
 }
 
-.answerSources span {
+.answerSources span,
+.answerSources a {
   overflow: hidden;
   color: #1d3552;
   font-weight: 900;
@@ -813,11 +814,24 @@ input:focus-visible {
   white-space: nowrap;
 }
 
+.answerSources a {
+  text-decoration: none;
+}
+
+.answerSources a:hover {
+  text-decoration: underline;
+}
+
 .answerSources small {
   overflow: hidden;
   color: var(--muted);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.answerSources small a {
+  color: inherit;
+  font-weight: 600;
 }
 
 .errorText {

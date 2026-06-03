@@ -5,6 +5,8 @@ const originalFetch = globalThis.fetch;
 
 afterEach(() => {
   globalThis.fetch = originalFetch;
+  delete process.env.OLLAMA_TEST_SYNTHESIS;
+  delete process.env.OLLAMA_SYNTHESIS_ENABLED;
   vi.restoreAllMocks();
 });
 
@@ -70,14 +72,40 @@ describe("POST /api/chat", () => {
   });
 
   it("returns procurement guidance for small-business queries", async () => {
+    globalThis.fetch = vi.fn(async () => {
+      throw new Error("Ollama unavailable in fallback test");
+    }) as typeof fetch;
+
     const response = await POST(jsonRequest({ message: "중소기업 조달 입찰 기회", section: "중소기업 지원" }));
     const body = await response.json();
 
     expect(response.status).toBe(200);
+    expect(body.model).toEqual({ provider: "ollama", name: "qwen3.5:4b", mode: "fallback" });
+    expect(body.answer).toContain("사용 모델");
+    expect(body.answer).toContain("질문 이해");
+    expect(body.answer).toContain("Reasoning/근거 판단");
+    expect(body.answer).toContain("추천 다음 행동");
+    expect(body.answer).toContain("출처와 한계");
     expect(body.answer).toContain("방위사업청 국내조달 조달계획");
     expect(body.answer).toContain("대표품명");
     expect(body.sources.length).toBeGreaterThan(0);
     expect(body.sources.some((source: { type?: string }) => source.type === "FILE")).toBe(true);
+    expect(body.sources.some((source: { sourceUrl?: string }) => source.sourceUrl?.startsWith("https://www.dapa.go.kr"))).toBe(true);
+  });
+
+  it("uses Ollama synthesis when available while preserving the structured answer contract", async () => {
+    process.env.OLLAMA_TEST_SYNTHESIS = "true";
+    process.env.OLLAMA_SYNTHESIS_ENABLED = "true";
+    globalThis.fetch = vi.fn(async () => new Response(JSON.stringify({ message: { content: "사용 모델: qwen3.5:4b\n\n질문 이해: 중소기업 지원 문의\n\nReasoning/근거 판단: 검색된 FILE 근거를 우선했습니다.\n\n답변: 조달계획과 입찰공고를 함께 확인하세요.\n\n추천 다음 행동: 원문 링크에서 최신 공고를 재확인하세요.\n\n출처와 한계: 공개 데이터 기준입니다." } }), { status: 200, headers: { "content-type": "application/json" } })) as typeof fetch;
+
+    const response = await POST(jsonRequest({ message: "중소기업 조달 입찰 기회", section: "중소기업 지원" }, { "x-forwarded-for": "203.0.113.91" }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.model).toEqual({ provider: "ollama", name: "qwen3.5:4b", mode: "synthesized" });
+    expect(body.answer).toContain("Reasoning/근거 판단");
+    expect(body.answer).toContain("답변");
+    expect(globalThis.fetch).toHaveBeenCalledOnce();
   });
 
   it("returns captured official homepage service labels", async () => {
@@ -90,6 +118,7 @@ describe("POST /api/chat", () => {
     expect(body.answer).toContain("방산수출입 지원시스템");
     expect(body.answer).toContain("국방연구 & 개발참여");
     expect(body.sources.some((source: { type?: string }) => source.type === "HOMEPAGE")).toBe(true);
+    expect(body.sources.find((source: { type?: string; sourceUrl?: string }) => source.type === "HOMEPAGE")?.sourceUrl).toContain("https://www.dapa.go.kr");
   });
 
   it("answers official homepage-only section content without requiring datasets or APIs", async () => {
