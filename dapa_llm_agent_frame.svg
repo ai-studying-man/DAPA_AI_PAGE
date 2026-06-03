@@ -1,0 +1,214 @@
+<svg width="1440" height="1000" viewBox="0 0 1440 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f5f7fb; }
+      .panel { fill: #ffffff; stroke: #dde5f0; stroke-width: 1; }
+      .soft { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; }
+      .nav { fill: #0f2747; }
+      .nav2 { fill: #17385f; }
+      .active { fill: #e8f1ff; stroke: #9fc3ff; stroke-width: 1; }
+      .subactive { fill: #0b66d8; }
+      .tag { fill: #eef6ff; stroke: #b8d7ff; stroke-width: 1; }
+      .tag2 { fill: #f2fbf6; stroke: #bde8ce; stroke-width: 1; }
+      .tag3 { fill: #fff7ed; stroke: #fed7aa; stroke-width: 1; }
+      .line { stroke: #e2e8f0; stroke-width: 1; }
+      .brand { font: 700 22px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #ffffff; }
+      .h1 { font: 700 24px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #0f172a; }
+      .h2 { font: 700 17px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #0f172a; }
+      .h3 { font: 700 14px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #0f172a; }
+      .body { font: 500 13px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #334155; }
+      .small { font: 500 12px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #64748b; }
+      .tiny { font: 500 11px "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; fill: #64748b; }
+      .white { fill: #ffffff; }
+      .blue { fill: #0b66d8; }
+      .muted { fill: #64748b; }
+      .danger { fill: #b45309; }
+      .success { fill: #047857; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="1000"/>
+
+  <!-- Top header -->
+  <rect class="nav" x="0" y="0" width="1440" height="72"/>
+  <rect class="nav2" x="24" y="16" width="42" height="42" rx="8"/>
+  <text x="82" y="44" class="brand">방위사업청 AI 공공데이터 에이전트</text>
+  <rect x="1060" y="20" width="142" height="32" rx="16" fill="#214b78"/>
+  <text x="1081" y="41" class="small white">데이터셋 44건</text>
+  <rect x="1216" y="20" width="104" height="32" rx="16" fill="#214b78"/>
+  <text x="1239" y="41" class="small white">FILE 31</text>
+  <rect x="1330" y="20" width="86" height="32" rx="16" fill="#214b78"/>
+  <text x="1355" y="41" class="small white">API 13</text>
+
+  <!-- Main columns -->
+  <rect class="panel" x="24" y="96" width="324" height="872" rx="12"/>
+  <rect class="panel" x="372" y="96" width="728" height="872" rx="12"/>
+  <rect class="panel" x="1124" y="96" width="292" height="872" rx="12"/>
+
+  <!-- Left sidebar -->
+  <text x="48" y="132" class="h2">데이터 목차</text>
+  <text x="48" y="154" class="small">목차 클릭 시 관련 데이터셋 목록 전환</text>
+  <line class="line" x1="48" y1="174" x2="324" y2="174"/>
+
+  <rect class="soft" x="44" y="192" width="280" height="54" rx="8"/>
+  <text x="60" y="215" class="h3">1. 방위사업 용어·규격 검색</text>
+  <text x="60" y="235" class="tiny">용어, 코드, 규격, 표준</text>
+  <text x="287" y="225" class="small muted">9</text>
+
+  <rect class="soft" x="44" y="254" width="280" height="54" rx="8"/>
+  <text x="60" y="277" class="h3">2. 법령·민원·자료 안내</text>
+  <text x="60" y="297" class="tiny">법령해석, 규정, 민원, 자료</text>
+  <text x="287" y="287" class="small muted">5</text>
+
+  <rect class="active" x="44" y="316" width="280" height="236" rx="10"/>
+  <text x="60" y="340" class="h3 blue">3. 군수품 조달정보</text>
+  <text x="60" y="360" class="tiny">조달계획, 입찰공고, 입찰결과, 계약정보</text>
+  <text x="286" y="350" class="small blue">22</text>
+
+  <rect class="subactive" x="60" y="378" width="248" height="34" rx="7"/>
+  <text x="76" y="400" class="body white">조달계획</text>
+  <text x="277" y="400" class="tiny white">4</text>
+
+  <rect x="60" y="418" width="248" height="34" rx="7" fill="#ffffff" stroke="#dbeafe"/>
+  <text x="76" y="440" class="body">입찰공고</text>
+  <text x="277" y="440" class="tiny muted">5</text>
+
+  <rect x="60" y="458" width="248" height="34" rx="7" fill="#ffffff" stroke="#dbeafe"/>
+  <text x="76" y="480" class="body">입찰결과</text>
+  <text x="277" y="480" class="tiny muted">6</text>
+
+  <rect x="60" y="498" width="248" height="34" rx="7" fill="#ffffff" stroke="#dbeafe"/>
+  <text x="76" y="520" class="body">계약정보</text>
+  <text x="277" y="520" class="tiny muted">7</text>
+
+  <rect class="soft" x="44" y="562" width="280" height="54" rx="8"/>
+  <text x="60" y="585" class="h3">4. K-방산 국내 정보</text>
+  <text x="60" y="605" class="tiny">방산업체, 방산물자, 국산화</text>
+  <text x="287" y="595" class="small muted">4</text>
+
+  <rect class="soft" x="44" y="624" width="280" height="54" rx="8"/>
+  <text x="60" y="647" class="h3">5. K-방산 해외 정보</text>
+  <text x="60" y="667" class="tiny">해외입찰, 전시회, 가격정보</text>
+  <text x="287" y="657" class="small muted">4</text>
+
+  <line class="line" x1="48" y1="700" x2="324" y2="700"/>
+  <text x="48" y="728" class="h3">선택 목차의 데이터셋</text>
+  <text x="48" y="750" class="tiny">군수품 조달정보 > 조달계획</text>
+  <rect x="48" y="766" width="276" height="36" rx="7" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="789" class="tiny">FILE  국내조달 조달계획</text>
+  <rect x="48" y="810" width="276" height="36" rx="7" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="833" class="tiny">FILE  국외조달 조달계획</text>
+  <rect x="48" y="854" width="276" height="36" rx="7" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="877" class="tiny">FILE  국내조달 공사계획</text>
+  <rect x="48" y="898" width="276" height="36" rx="7" fill="#eef6ff" stroke="#b8d7ff"/>
+  <text x="60" y="921" class="tiny blue">API   군수품조달정보 조달계획</text>
+
+  <!-- Center chat frame -->
+  <text x="404" y="132" class="h1">군수품 조달정보 AI</text>
+  <text x="404" y="156" class="small">파일데이터 기반 분석 + 오픈API 기반 최신 조회를 함께 제공합니다.</text>
+  <rect x="946" y="118" width="124" height="30" rx="15" fill="#ecfdf5" stroke="#bbf7d0"/>
+  <circle cx="964" cy="133" r="5" fill="#10b981"/>
+  <text x="976" y="138" class="small success">실시간 API 연결</text>
+  <line class="line" x1="404" y1="176" x2="1068" y2="176"/>
+
+  <rect x="404" y="204" width="410" height="48" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="424" y="226" class="body">조달계획 기준으로 올해 참여 가능한 사업을 찾아줘</text>
+  <text x="424" y="244" class="tiny">사용자 질문 예시</text>
+
+  <rect x="404" y="282" width="626" height="232" rx="12" fill="#ffffff" stroke="#dbeafe"/>
+  <rect x="424" y="302" width="36" height="36" rx="8" fill="#0b66d8"/>
+  <text x="435" y="326" class="h3 white">AI</text>
+  <text x="476" y="318" class="h3">답변 초안</text>
+  <text x="476" y="340" class="small">국내조달 조달계획, 국외조달 조달계획, 국내조달 공사계획과 조달계획 API를</text>
+  <text x="476" y="360" class="small">함께 조회했습니다. 검색 조건을 품목, 발주기관, 연도, 사업명으로 좁힐 수 있습니다.</text>
+
+  <rect x="476" y="386" width="166" height="30" rx="15" fill="#eef6ff"/>
+  <text x="494" y="406" class="tiny blue">#조달계획</text>
+  <rect x="650" y="386" width="152" height="30" rx="15" fill="#eef6ff"/>
+  <text x="668" y="406" class="tiny blue">#국내조달</text>
+  <rect x="810" y="386" width="156" height="30" rx="15" fill="#eef6ff"/>
+  <text x="828" y="406" class="tiny blue">#국외조달</text>
+
+  <text x="476" y="448" class="small">추천 흐름</text>
+  <circle cx="486" cy="474" r="4" fill="#0b66d8"/>
+  <text x="500" y="479" class="small">1. 현재 조달계획 API로 최신 사업 후보 조회</text>
+  <circle cx="486" cy="496" r="4" fill="#0b66d8"/>
+  <text x="500" y="501" class="small">2. 파일데이터로 과거 조달계획과 공사계획 비교</text>
+
+  <rect x="404" y="542" width="626" height="168" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="424" y="568" class="h3">출처 데이터셋</text>
+  <rect x="424" y="586" width="282" height="36" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="440" y="609" class="tiny">FILE 방위사업청_국내조달 조달계획</text>
+  <rect x="718" y="586" width="282" height="36" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="734" y="609" class="tiny">FILE 방위사업청_국외조달 조달계획</text>
+  <rect x="424" y="632" width="282" height="36" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="440" y="655" class="tiny">FILE 방위사업청_국내조달 공사계획</text>
+  <rect x="718" y="632" width="282" height="36" rx="8" fill="#ffffff" stroke="#b8d7ff"/>
+  <text x="734" y="655" class="tiny blue">API 방위사업청_군수품조달정보 조달계획</text>
+  <text x="424" y="692" class="tiny">답변에는 기준일, 파일 갱신주기, API 조회 시점을 함께 표시합니다.</text>
+
+  <rect x="404" y="738" width="626" height="78" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="424" y="766" class="small">다음 질문 추천</text>
+  <rect x="424" y="782" width="180" height="24" rx="12" fill="#f1f5f9"/>
+  <text x="438" y="798" class="tiny">유사 입찰결과 비교</text>
+  <rect x="614" y="782" width="194" height="24" rx="12" fill="#f1f5f9"/>
+  <text x="628" y="798" class="tiny">계약정보까지 이어보기</text>
+  <rect x="818" y="782" width="176" height="24" rx="12" fill="#f1f5f9"/>
+  <text x="832" y="798" class="tiny">업체 참여 가능성 확인</text>
+
+  <rect x="404" y="866" width="626" height="64" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="428" y="904" class="body muted">방위사업, 조달계획, 입찰공고, 계약정보에 대해 질문하세요.</text>
+  <rect x="956" y="880" width="54" height="36" rx="18" fill="#0b66d8"/>
+  <text x="973" y="903" class="body white">전송</text>
+
+  <!-- Right keyword panel -->
+  <text x="1152" y="132" class="h2">핵심 키워드</text>
+  <text x="1152" y="154" class="small">선택 목차와 데이터셋에 따라 자동 변경</text>
+  <line class="line" x1="1152" y1="174" x2="1388" y2="174"/>
+
+  <rect class="tag" x="1152" y="198" width="140" height="34" rx="17"/>
+  <text x="1168" y="220" class="small blue">#군수품 조달정보</text>
+  <rect class="tag" x="1152" y="242" width="98" height="34" rx="17"/>
+  <text x="1168" y="264" class="small blue">#조달계획</text>
+  <rect class="tag" x="1260" y="242" width="98" height="34" rx="17"/>
+  <text x="1276" y="264" class="small blue">#입찰공고</text>
+  <rect class="tag" x="1152" y="286" width="98" height="34" rx="17"/>
+  <text x="1168" y="308" class="small blue">#입찰결과</text>
+  <rect class="tag" x="1260" y="286" width="98" height="34" rx="17"/>
+  <text x="1276" y="308" class="small blue">#계약정보</text>
+  <rect class="tag2" x="1152" y="330" width="98" height="34" rx="17"/>
+  <text x="1168" y="352" class="small success">#국내조달</text>
+  <rect class="tag2" x="1260" y="330" width="98" height="34" rx="17"/>
+  <text x="1276" y="352" class="small success">#국외조달</text>
+  <rect class="tag3" x="1152" y="374" width="112" height="34" rx="17"/>
+  <text x="1168" y="396" class="small danger">#시설공사</text>
+  <rect class="tag3" x="1274" y="374" width="112" height="34" rx="17"/>
+  <text x="1290" y="396" class="small danger">#공개수의</text>
+
+  <text x="1152" y="456" class="h3">목차별 대표 키워드</text>
+  <rect x="1152" y="476" width="236" height="76" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="1168" y="500" class="small">방위사업 용어·규격</text>
+  <text x="1168" y="522" class="tiny">#용어사전 #국방규격 #코드조회</text>
+  <text x="1168" y="540" class="tiny">#국방표준 #군수품목록</text>
+
+  <rect x="1152" y="562" width="236" height="76" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="1168" y="586" class="small">법령·민원·자료</text>
+  <text x="1168" y="608" class="tiny">#법령해석 #규정현황 #민원</text>
+  <text x="1168" y="626" class="tiny">#지식마당 #공개자료</text>
+
+  <rect x="1152" y="648" width="236" height="76" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="1168" y="672" class="small">K-방산 국내 정보</text>
+  <text x="1168" y="694" class="tiny">#방산업체 #방산물자</text>
+  <text x="1168" y="712" class="tiny">#국산화개발품목 #참여업체</text>
+
+  <rect x="1152" y="734" width="236" height="76" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="1168" y="758" class="small">K-방산 해외 정보</text>
+  <text x="1168" y="780" class="tiny">#해외입찰 #방산전시회</text>
+  <text x="1168" y="798" class="tiny">#국외조달 #무기체계가격</text>
+
+  <line class="line" x1="1152" y1="838" x2="1388" y2="838"/>
+  <text x="1152" y="866" class="h3">상태 표시 원칙</text>
+  <text x="1152" y="890" class="tiny">FILE: 기준일과 갱신주기 표시</text>
+  <text x="1152" y="912" class="tiny">API: 조회 시각과 호출 결과 표시</text>
+  <text x="1152" y="934" class="tiny">답변: 출처 데이터셋을 항상 노출</text>
+</svg>

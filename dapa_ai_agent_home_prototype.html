@@ -1,0 +1,1495 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>방위사업청 AI 공공데이터 에이전트 프로토타입</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #10233f;
+      --blue: #0b64ce;
+      --blue-2: #0e7bdc;
+      --ink: #172033;
+      --text: #334155;
+      --muted: #64748b;
+      --line: #d9e2ee;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --soft: #f8fbff;
+      --green: #0f8b66;
+      --amber: #a55f00;
+      --red: #b42318;
+      --shadow: 0 18px 45px rgba(16, 35, 63, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .govbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 34px;
+      padding: 0 28px;
+      background: #eef2f7;
+      color: #4b5563;
+      font-size: 13px;
+    }
+
+    .dot-flag {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 46% 37%, #e11d48 0 27%, transparent 28%),
+        radial-gradient(circle at 55% 62%, #1d4ed8 0 25%, transparent 26%),
+        #fff;
+      border: 1px solid #cbd5e1;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 72px;
+      padding: 0 32px;
+      background: rgba(255, 255, 255, .96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 240px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: #26384f;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .top-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn, .pill-btn, .primary-btn, .ghost-btn {
+      border: 0;
+      border-radius: 999px;
+      min-height: 38px;
+      padding: 0 16px;
+      font-weight: 800;
+    }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      padding: 0;
+      background: #eff4fa;
+      color: var(--navy);
+    }
+
+    .pill-btn {
+      background: #eff4fa;
+      color: var(--navy);
+    }
+
+    .primary-btn {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(11, 100, 206, .22);
+    }
+
+    .ghost-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #203045;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 430px;
+      gap: 30px;
+      max-width: 1360px;
+      margin: 28px auto 18px;
+      padding: 0 28px;
+    }
+
+    .hero-main {
+      position: relative;
+      overflow: hidden;
+      min-height: 310px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 86% 36%, rgba(82, 167, 255, .32) 0 13%, transparent 14%),
+        radial-gradient(circle at 78% 72%, rgba(255, 255, 255, .16) 0 18%, transparent 19%),
+        linear-gradient(100deg, rgba(12, 32, 59, .98) 0%, rgba(12, 50, 91, .9) 47%, rgba(18, 94, 151, .66) 100%);
+      background-repeat: no-repeat;
+      background-position: right 56px center;
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main::after {
+      content: "AI";
+      position: absolute;
+      right: 54px;
+      top: 54px;
+      display: grid;
+      place-items: center;
+      width: 118px;
+      height: 118px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 34px;
+      background: rgba(255, 255, 255, .1);
+      color: rgba(255, 255, 255, .5);
+      font-size: 42px;
+      font-weight: 900;
+      transform: rotate(-8deg);
+    }
+
+    .hero-main-inner {
+      max-width: 760px;
+      padding: 38px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .12);
+      color: #dbeafe;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin: 0 0 28px;
+      color: #dce8f7;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .agent-entry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 720px;
+      min-height: 64px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, .28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .14);
+      backdrop-filter: blur(8px);
+    }
+
+    .agent-entry input {
+      flex: 1;
+      min-width: 0;
+      height: 44px;
+      border: 0;
+      outline: 0;
+      padding: 0 18px;
+      background: transparent;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .agent-entry input::placeholder {
+      color: rgba(255, 255, 255, .74);
+    }
+
+    .agent-entry button {
+      flex: 0 0 auto;
+      min-width: 120px;
+      height: 48px;
+      border: 0;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .mission-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 310px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 12px 34px rgba(16, 35, 63, .08);
+    }
+
+    .mission-panel h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .mission-panel p {
+      margin: 12px 0 18px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .mission-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .mission-stat {
+      min-height: 70px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft);
+    }
+
+    .mission-stat strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .mission-stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .quick-row {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 1360px;
+      margin: 0 auto 18px;
+      padding: 0 28px;
+    }
+
+    .quick-card {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 78px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      box-shadow: 0 8px 22px rgba(16, 35, 63, .05);
+    }
+
+    .quick-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #eef6ff;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .quick-card strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      line-height: 1.28;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 278px minmax(0, 1fr) 320px;
+      gap: 18px;
+      max-width: 1360px;
+      margin: 0 auto 40px;
+      padding: 0 28px;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: 0 10px 26px rgba(16, 35, 63, .06);
+    }
+
+    .panel-head {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+
+    .panel-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .rail {
+      padding: 12px;
+    }
+
+    .rail-button {
+      width: 100%;
+      min-height: 58px;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .rail-button[aria-current="true"] {
+      border-color: #b7d4ff;
+      background: #eef6ff;
+    }
+
+    .rail-button strong {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .rail-button span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .count {
+      display: inline-grid;
+      place-items: center;
+      min-width: 26px;
+      height: 22px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .role-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .role-switch button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .role-switch button[aria-pressed="true"] {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 720px;
+    }
+
+    .chat-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .chat-title h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .chat-title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chat-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    .mini-btn {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 11px;
+      background: #fff;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .mini-btn[aria-pressed="true"] {
+      border-color: var(--blue);
+      background: #eef6ff;
+      color: var(--blue);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 34px;
+      padding: 0 12px;
+      border: 1px solid #fed7aa;
+      border-radius: 999px;
+      background: #fff7ed;
+      color: var(--amber);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--amber);
+    }
+
+    .subtabs {
+      display: none;
+      gap: 8px;
+      padding: 12px 18px 0;
+    }
+
+    .subtabs.is-visible {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .subtabs button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 13px;
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .subtabs button[aria-pressed="true"] {
+      border-color: var(--blue);
+      background: #eef6ff;
+      color: var(--blue);
+    }
+
+    .messages {
+      flex: 1;
+      overflow: auto;
+      padding: 18px;
+    }
+
+    .message {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .message.user .avatar {
+      background: #e2e8f0;
+      color: var(--navy);
+    }
+
+    .bubble {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .message.user .bubble {
+      background: var(--soft);
+    }
+
+    .bubble strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .bubble p {
+      margin: 0 0 10px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .answer-chip {
+      min-height: 54px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f8fafc;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .answer-chip b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .source-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .source-line span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .prompt-strip {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      padding: 0 18px 14px;
+    }
+
+    .prompt-strip button {
+      flex: 0 0 auto;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 12px;
+      background: #fff;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .composer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      border-radius: 0 0 16px 16px;
+    }
+
+    .composer textarea {
+      min-height: 48px;
+      max-height: 140px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      outline: 0;
+      padding: 13px 14px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .composer textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(11, 100, 206, .12);
+    }
+
+    .composer button {
+      align-self: end;
+      min-width: 92px;
+      min-height: 48px;
+    }
+
+    .context-body {
+      padding: 16px;
+    }
+
+    .keyword-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .keyword-cloud span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #eef6ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .evidence-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .evidence-tabs div {
+      min-height: 62px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .evidence-tabs strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .evidence-tabs span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .dataset-list {
+      display: grid;
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .dataset-item {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-height: 48px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .dataset-type {
+      display: grid;
+      place-items: center;
+      height: 28px;
+      border-radius: 7px;
+      background: #f1f5f9;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .dataset-type.api {
+      background: #ecfdf5;
+      color: var(--green);
+    }
+
+    .dataset-item span:last-child {
+      overflow-wrap: anywhere;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .principles {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .principles div {
+      padding: 11px;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .principles b {
+      color: var(--ink);
+    }
+
+    @media (max-width: 1180px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .workspace {
+        grid-template-columns: 240px minmax(0, 1fr);
+      }
+
+      .context-panel {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .site-header {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 18px;
+      }
+
+      .top-nav {
+        width: 100%;
+        overflow: auto;
+        padding-bottom: 2px;
+      }
+
+      .top-tools {
+        width: 100%;
+      }
+
+      .hero, .quick-row, .workspace {
+        padding: 0 14px;
+      }
+
+      .hero-main-inner {
+        padding: 26px 22px;
+      }
+
+      .agent-entry {
+        align-items: stretch;
+        flex-direction: column;
+        border-radius: 18px;
+      }
+
+      .agent-entry input {
+        width: 100%;
+      }
+
+      .agent-entry button {
+        width: 100%;
+      }
+
+      .quick-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .chat-actions {
+        justify-content: flex-start;
+      }
+
+      .answer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .composer {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="govbar">
+    <span class="dot-flag" aria-hidden="true"></span>
+    <span>이 누리집은 대한민국 공식 전자정부 누리집의 AI 에이전트 화면 시안입니다.</span>
+  </div>
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">D</div>
+      <div>
+        <strong>방위사업청</strong>
+        <span>AI 공공데이터 에이전트</span>
+      </div>
+    </div>
+    <nav class="top-nav" aria-label="주요 메뉴">
+      <span>알림·소식</span>
+      <span>업무·정책</span>
+      <span>정보공개</span>
+      <span>민원·참여</span>
+      <span>방위사업청 소개</span>
+    </nav>
+    <div class="top-tools">
+      <button class="icon-btn" type="button" aria-label="통합검색">⌕</button>
+      <button class="pill-btn" type="button">전체메뉴</button>
+      <button class="primary-btn" type="button" data-quick="AI 에이전트로 공개 데이터를 검색하고 싶어요.">AI 질문</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-main">
+        <div class="hero-main-inner">
+          <span class="eyebrow">공개 데이터 기반 · 로컬 LLM 연동 준비</span>
+          <h1 id="hero-title">방위사업 정보를<br />질문으로 바로 찾습니다.</h1>
+          <p class="hero-copy">직원, 방산업체, 국민이 조달·계약·규격·법령·K-방산 정보를 같은 화면에서 묻고, 답변의 근거 데이터셋을 확인할 수 있습니다.</p>
+          <form class="agent-entry" id="heroForm">
+            <input id="heroInput" type="search" placeholder="예: 국외조달 입찰공고와 과거 계약정보를 같이 보여줘" />
+            <button type="submit">AI에게 묻기</button>
+          </form>
+        </div>
+      </div>
+
+      <aside class="mission-panel" aria-label="서비스 목표">
+        <div>
+          <h2>데이터로 K-방산의 확장을 돕는 공개형 에이전트</h2>
+          <p>데이터는 축적하지 않고, 공개 데이터와 향후 Ollama 기반 Qwen/Gemma 모델을 연결할 수 있도록 화면·흐름·상태 표시만 먼저 구현합니다.</p>
+        </div>
+        <div class="mission-stats">
+          <div class="mission-stat"><strong>44</strong><span>활용 데이터셋</span></div>
+          <div class="mission-stat"><strong>5</strong><span>주요 목차</span></div>
+          <div class="mission-stat"><strong>0</strong><span>대화 저장</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="quick-row" aria-label="자주 쓰는 AI 버튼">
+      <button class="quick-card" type="button" data-section="procurement" data-sub="notice" data-quick="현재 참여 가능한 입찰공고를 찾아줘.">
+        <span class="quick-icon" aria-hidden="true">공</span>
+        <strong>입찰공고 찾기</strong>
+      </button>
+      <button class="quick-card" type="button" data-section="procurement" data-sub="plan" data-quick="올해 조달계획을 품목별로 요약해줘.">
+        <span class="quick-icon" aria-hidden="true">계</span>
+        <strong>조달계획 보기</strong>
+      </button>
+      <button class="quick-card" type="button" data-section="procurement" data-sub="contract" data-quick="유사 사업의 계약정보를 비교해줘.">
+        <span class="quick-icon" aria-hidden="true">약</span>
+        <strong>계약정보 비교</strong>
+      </button>
+      <button class="quick-card" type="button" data-section="terms" data-quick="방위사업 용어와 국방규격을 쉽게 설명해줘.">
+        <span class="quick-icon" aria-hidden="true">규</span>
+        <strong>용어·규격 설명</strong>
+      </button>
+      <button class="quick-card" type="button" data-section="law" data-quick="방위사업 관련 법령해석과 민원 정보를 찾아줘.">
+        <span class="quick-icon" aria-hidden="true">법</span>
+        <strong>법령·민원 안내</strong>
+      </button>
+      <button class="quick-card" type="button" data-section="overseas" data-quick="K-방산 해외입찰과 전시회 정보를 알려줘.">
+        <span class="quick-icon" aria-hidden="true">해</span>
+        <strong>K-방산 해외기회</strong>
+      </button>
+    </section>
+
+    <section class="workspace" aria-label="AI 에이전트 작업 화면">
+      <aside class="panel">
+        <div class="panel-head">
+          <h2>데이터 목차</h2>
+          <p>질문 목적에 맞춰 목차를 먼저 고르면 답변 출처가 좁혀집니다.</p>
+        </div>
+        <div class="rail" id="sectionRail"></div>
+        <div class="role-switch" aria-label="사용자 유형">
+          <button type="button" data-role="company" aria-pressed="true">방산업체</button>
+          <button type="button" data-role="citizen" aria-pressed="false">국민</button>
+          <button type="button" data-role="staff" aria-pressed="false">직원</button>
+        </div>
+      </aside>
+
+      <section class="panel chat-panel" aria-labelledby="agentTitle">
+        <div class="chat-toolbar">
+          <div class="chat-title">
+            <h2 id="agentTitle">군수품 조달정보</h2>
+            <p id="agentDesc">조달계획, 입찰공고, 입찰결과, 계약정보를 한 번에 이어서 탐색합니다.</p>
+          </div>
+          <div class="chat-actions" aria-label="채팅 도구">
+            <button class="mini-btn" type="button" id="activeOnlyButton" aria-pressed="false">활성 공고만</button>
+            <button class="mini-btn" type="button" id="sourceToggleButton" aria-pressed="true">출처 보기</button>
+            <button class="mini-btn" type="button" id="copyAnswerButton">답변 복사</button>
+            <button class="mini-btn" type="button" id="clearChatButton">새 질문</button>
+            <span class="status-pill">모델 미연결 · 화면 기능 구현</span>
+          </div>
+        </div>
+        <div class="subtabs is-visible" id="subtabs"></div>
+        <div class="messages" id="messages" aria-live="polite"></div>
+        <div class="prompt-strip" id="promptStrip" aria-label="추천 질문"></div>
+        <form class="composer" id="chatForm">
+          <textarea id="chatInput" placeholder="질문을 입력하세요. 예: 국외조달 입찰공고와 과거 계약정보를 같이 비교해줘."></textarea>
+          <button class="primary-btn" type="submit">전송</button>
+        </form>
+      </section>
+
+      <aside class="panel context-panel">
+        <div class="panel-head">
+          <h2>근거와 키워드</h2>
+          <p>선택한 목차에 맞는 데이터셋과 해시태그를 보여줍니다.</p>
+        </div>
+        <div class="context-body">
+          <div class="keyword-cloud" id="keywordCloud"></div>
+          <div class="evidence-tabs">
+            <div><strong id="fileCount">0</strong><span>파일데이터</span></div>
+            <div><strong id="apiCount">0</strong><span>오픈 API</span></div>
+          </div>
+          <div class="dataset-list" id="datasetList"></div>
+          <div class="principles">
+            <div><b>출처 우선</b><br />답변마다 사용한 데이터셋과 기준을 노출합니다.</div>
+            <div><b>비저장 원칙</b><br />시연 화면은 대화 내용을 로컬 저장소에 남기지 않습니다.</div>
+            <div><b>Ollama 준비</b><br />향후 Qwen/Gemma 호출부만 교체하면 됩니다.</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const OLLAMA_READY_CONFIG = {
+      enabled: false,
+      endpoint: "http://localhost:11434/api/chat",
+      candidateModels: ["qwen2.5:7b", "qwen3:8b", "gemma3:12b"],
+      note: "현재 화면은 데이터/API/LLM 호출 없이 UI 흐름만 동작합니다."
+    };
+
+    const sections = {
+      terms: {
+        order: 1,
+        title: "방위사업 용어·규격 검색",
+        short: "용어, 코드, 규격, 표준",
+        desc: "방위사업 용어, 국방규격, 군수품 코드, 국방표준을 쉽게 풀어 설명합니다.",
+        keywords: ["#용어사전", "#국방규격", "#코드조회", "#국방표준", "#군수품목록"],
+        prompts: {
+          company: ["입찰공고에 나온 용어를 쉽게 설명해줘.", "군수품 코드와 관련 규격을 같이 찾아줘."],
+          citizen: ["방위사업 용어를 일반인이 이해하기 쉽게 설명해줘.", "국방규격 공개 정보가 무엇인지 알려줘."],
+          staff: ["용어사전과 국방전자조달 용어를 비교해줘.", "코드조회 API로 확인할 항목을 정리해줘."]
+        },
+        datasets: [
+          ["FILE", "방위사업청_국방통합 용어사전"],
+          ["FILE", "방위사업청_용어사전"],
+          ["FILE", "방위사업청_국방전자조달 용어사전"],
+          ["FILE", "방위사업청_군수품 목록화 현황"],
+          ["FILE", "방위사업청_국방규격공개 정보"],
+          ["API", "방위사업청_군수품조달정보 코드조회"],
+          ["API", "방위사업청_군수품조달정보 코드조회_GW"],
+          ["API", "방위사업청_국방표준종합서비스"],
+          ["API", "방위사업청_국방표준종합서비스_GW"]
+        ]
+      },
+      law: {
+        order: 2,
+        title: "법령·민원·자료 안내",
+        short: "법령해석, 규정, 민원, 자료",
+        desc: "방위사업 관련 법령, 규정, 민원 흐름, 공개 자료를 질문형으로 안내합니다.",
+        keywords: ["#법령해석", "#규정현황", "#민원", "#지식마당", "#공개자료"],
+        prompts: {
+          company: ["계약 참여 전에 확인해야 할 방위사업 법령을 알려줘.", "민원 접수 유형을 기준으로 문의 경로를 알려줘."],
+          citizen: ["방위사업 법령자료를 쉽게 찾아줘.", "민원은 어디에 어떻게 접수하면 되는지 알려줘."],
+          staff: ["법령해석 목록과 규정현황을 연결해서 보여줘.", "지식마당 자료 분포를 요약해줘."]
+        },
+        datasets: [
+          ["FILE", "방위사업청_방위사업관계법령 및 규정현황"],
+          ["FILE", "방위사업청_민원 접수 현황"],
+          ["FILE", "방위사업청_지식마당 자료 등록현황"],
+          ["API", "법제처_방위사업청 법령해석 목록 조회"],
+          ["API", "법제처_방위사업청 법령해석 본문 조회"]
+        ]
+      },
+      procurement: {
+        order: 3,
+        title: "군수품 조달정보",
+        short: "조달계획, 입찰공고, 입찰결과, 계약정보",
+        desc: "조달계획부터 입찰공고, 입찰결과, 계약정보까지 이어서 탐색합니다.",
+        keywords: ["#군수품조달정보", "#조달계획", "#입찰공고", "#입찰결과", "#계약정보", "#국내조달", "#국외조달"],
+        prompts: {
+          company: ["현재 참여 가능한 입찰공고를 찾아줘.", "조달계획과 과거 계약정보를 같이 비교해줘."],
+          citizen: ["최근 계약정보를 투명성 관점에서 설명해줘.", "입찰결과가 어떤 방식으로 공개되는지 알려줘."],
+          staff: ["조달계획, 입찰공고, 계약정보의 데이터 흐름을 점검해줘.", "시설공사와 국내조달 결과를 분리해서 요약해줘."]
+        },
+        defaultSub: "plan",
+        subs: {
+          plan: {
+            title: "조달계획",
+            datasets: [
+              ["FILE", "방위사업청_국내조달 조달계획"],
+              ["FILE", "방위사업청_국외조달 조달계획"],
+              ["FILE", "방위사업청_국내조달 공사계획"],
+              ["API", "방위사업청_군수품조달정보 조달계획"]
+            ]
+          },
+          notice: {
+            title: "입찰공고",
+            datasets: [
+              ["FILE", "방위사업청_국내조달 경쟁 입찰공고"],
+              ["FILE", "방위사업청_국외조달 입찰공고"],
+              ["FILE", "방위사업청_시설공사 경쟁 입찰공고"],
+              ["FILE", "방위사업청_신기술 입찰공고 사업"],
+              ["API", "방위사업청_군수품조달정보 입찰공고"]
+            ]
+          },
+          result: {
+            title: "입찰결과",
+            datasets: [
+              ["FILE", "방위사업청_국내조달 경쟁 입찰결과"],
+              ["FILE", "방위사업청_국내조달 공개수의 입찰결과"],
+              ["FILE", "방위사업청_국외조달 입찰결과"],
+              ["FILE", "방위사업청_시설공사 경쟁 입찰결과"],
+              ["FILE", "방위사업청_시설공사 공개수의 입찰결과"],
+              ["API", "방위사업청_군수품조달정보 입찰결과"]
+            ]
+          },
+          contract: {
+            title: "계약정보",
+            datasets: [
+              ["FILE", "방위사업청_국내조달 계약정보"],
+              ["FILE", "방위사업청_국외조달 계약정보"],
+              ["FILE", "방위사업청_시설공사 계약정보"],
+              ["FILE", "방위사업청_무기체계 주요 기능별 계약현황"],
+              ["API", "방위사업청_군수품조달정보 계약정보"],
+              ["API", "방위사업청_군수품조달정보 계약정보_GW"]
+            ]
+          }
+        }
+      },
+      domestic: {
+        order: 4,
+        title: "K-방산 국내 정보",
+        short: "업체, 물자, 국산화, 기술개발",
+        desc: "국내 방산업체, 방산물자, 국산화개발품목, 핵심기술 R&D 흐름을 연결합니다.",
+        keywords: ["#방산업체", "#방산물자", "#국산화개발품목", "#입찰참여업체", "#핵심기술R&D"],
+        prompts: {
+          company: ["국산화개발품목과 참여업체 정보를 같이 보여줘.", "방산업체 지정현황을 기준으로 시장을 설명해줘."],
+          citizen: ["K-방산 국내 생태계를 쉽게 설명해줘.", "방산물자와 업체 지정현황이 왜 중요한지 알려줘."],
+          staff: ["국산화개발품목과 R&D 과제수 흐름을 연결해줘.", "입찰참여업체 데이터의 활용 포인트를 정리해줘."]
+        },
+        datasets: [
+          ["FILE", "방위사업청 국내조달 입찰참여업체정보"],
+          ["FILE", "방위사업청_방산업체 지정현황"],
+          ["FILE", "방위사업청_방산물자 및 업체 지정현황"],
+          ["FILE", "방위사업청_국방전자조달시스템_국산화개발품목"],
+          ["FILE", "방위사업청_연도별 무기체계 핵심기술 연구개발 예산 및 과제수 현황"]
+        ]
+      },
+      overseas: {
+        order: 5,
+        title: "K-방산 해외 정보",
+        short: "해외입찰, 전시회, 가격정보",
+        desc: "해외입찰, 방산 전시회, 국외 무기체계 가격정보를 묶어 해외진출 기회를 찾습니다.",
+        keywords: ["#해외입찰", "#방산전시회", "#국외조달", "#무기체계가격", "#K방산수출"],
+        prompts: {
+          company: ["해외입찰과 방산 전시회 일정을 같이 찾아줘.", "국외조달 가격정보를 해외진출 관점에서 설명해줘."],
+          citizen: ["K-방산 해외진출 현황을 쉽게 알려줘.", "해외입찰정보가 왜 중요한지 설명해줘."],
+          staff: ["해외입찰 API와 전시회 데이터를 연결한 서비스 흐름을 제안해줘.", "수출지원 관점의 핵심 지표를 정리해줘."]
+        },
+        datasets: [
+          ["FILE", "방위사업청_방산 전시회 정보"],
+          ["FILE", "방위사업청_국외조달 무기체계 가격정보 획득현황"],
+          ["API", "방위사업청_해외입찰정보"],
+          ["API", "방위사업청_해외입찰정보_GW"]
+        ]
+      }
+    };
+
+    const state = {
+      section: "procurement",
+      sub: "plan",
+      role: "company",
+      activeOnly: false,
+      showSources: true,
+      messages: []
+    };
+
+    const sectionRail = document.getElementById("sectionRail");
+    const agentTitle = document.getElementById("agentTitle");
+    const agentDesc = document.getElementById("agentDesc");
+    const subtabs = document.getElementById("subtabs");
+    const messages = document.getElementById("messages");
+    const promptStrip = document.getElementById("promptStrip");
+    const keywordCloud = document.getElementById("keywordCloud");
+    const fileCount = document.getElementById("fileCount");
+    const apiCount = document.getElementById("apiCount");
+    const datasetList = document.getElementById("datasetList");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const heroForm = document.getElementById("heroForm");
+    const heroInput = document.getElementById("heroInput");
+    const activeOnlyButton = document.getElementById("activeOnlyButton");
+    const sourceToggleButton = document.getElementById("sourceToggleButton");
+    const copyAnswerButton = document.getElementById("copyAnswerButton");
+    const clearChatButton = document.getElementById("clearChatButton");
+
+    function getActiveDatasets() {
+      const section = sections[state.section];
+      if (section.subs) {
+        return section.subs[state.sub || section.defaultSub].datasets;
+      }
+      return section.datasets;
+    }
+
+    function getSectionCount(sectionKey) {
+      const section = sections[sectionKey];
+      if (section.subs) {
+        return Object.values(section.subs).reduce((sum, sub) => sum + sub.datasets.length, 0);
+      }
+      return section.datasets.length;
+    }
+
+    function renderRail() {
+      sectionRail.innerHTML = Object.entries(sections)
+        .sort((a, b) => a[1].order - b[1].order)
+        .map(([key, section]) => `
+          <button class="rail-button" type="button" data-section="${key}" aria-current="${key === state.section}">
+            <strong>${section.title}<span class="count">${getSectionCount(key)}</span></strong>
+            <span>${section.short}</span>
+          </button>
+        `).join("");
+    }
+
+    function renderSubtabs() {
+      const section = sections[state.section];
+      if (!section.subs) {
+        subtabs.classList.remove("is-visible");
+        subtabs.innerHTML = "";
+        return;
+      }
+      subtabs.classList.add("is-visible");
+      subtabs.innerHTML = Object.entries(section.subs).map(([key, sub]) => `
+        <button type="button" data-sub="${key}" aria-pressed="${key === state.sub}">${sub.title}</button>
+      `).join("");
+    }
+
+    function renderContext() {
+      const section = sections[state.section];
+      const datasets = getActiveDatasets();
+      keywordCloud.innerHTML = section.keywords.map(keyword => `<span>${keyword}</span>`).join("");
+      fileCount.textContent = datasets.filter(item => item[0] === "FILE").length;
+      apiCount.textContent = datasets.filter(item => item[0] === "API").length;
+      datasetList.innerHTML = datasets.map(([type, name]) => `
+        <div class="dataset-item">
+          <span class="dataset-type ${type === "API" ? "api" : ""}">${type}</span>
+          <span>${name}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderPrompts() {
+      const section = sections[state.section];
+      const prompts = section.prompts[state.role] || section.prompts.company;
+      promptStrip.innerHTML = prompts.map(prompt => `<button type="button" data-prompt="${prompt}">${prompt}</button>`).join("");
+    }
+
+    function renderMessages() {
+      messages.innerHTML = state.messages.map(message => {
+        const isUser = message.role === "user";
+        const sourceHtml = message.sources && state.showSources ? `
+          <div class="source-line">${message.sources.map(source => `<span>${source}</span>`).join("")}</div>
+        ` : "";
+        const cardsHtml = message.cards ? `
+          <div class="answer-grid">${message.cards.map(card => `<div class="answer-chip"><b>${card.title}</b>${card.body}</div>`).join("")}</div>
+        ` : "";
+        return `
+          <article class="message ${isUser ? "user" : "assistant"}">
+            <div class="avatar">${isUser ? "나" : "AI"}</div>
+            <div class="bubble">
+              <strong>${message.title}</strong>
+              <p>${message.text}</p>
+              ${cardsHtml}
+              ${sourceHtml}
+            </div>
+          </article>
+        `;
+      }).join("");
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addAssistantIntro() {
+      const section = sections[state.section];
+      const datasets = getActiveDatasets();
+      const api = datasets.filter(item => item[0] === "API").length;
+      const file = datasets.filter(item => item[0] === "FILE").length;
+      const activeNotice = state.activeOnly ? " 활성 공고만 필터가 켜져 있어 입찰공고 질문에는 진행 중인 공고를 우선합니다." : "";
+      state.messages = [{
+        role: "assistant",
+        title: `${section.title} 에이전트`,
+        text: `${section.desc} 현재 선택된 범위는 파일데이터 ${file}건, 오픈 API ${api}건입니다.${activeNotice} 실제 데이터와 모델 연결 전까지는 화면 흐름과 출처 표시 방식을 시연합니다.`,
+        cards: [
+          { title: "1. 먼저 할 일", body: "목차 또는 자주 쓰는 버튼을 선택합니다." },
+          { title: "2. 답변 방식", body: "파일 기준 분석과 API 최신 조회를 분리합니다." },
+          { title: "3. 확인 기준", body: "답변 하단에 데이터셋 출처를 노출합니다." }
+        ],
+        sources: datasets.slice(0, 4).map(item => `${item[0]} ${item[1]}`)
+      }];
+    }
+
+    function setSection(sectionKey, subKey) {
+      state.section = sectionKey;
+      const section = sections[sectionKey];
+      state.sub = section.subs ? (subKey || state.sub || section.defaultSub) : null;
+      if (section.subs && !section.subs[state.sub]) state.sub = section.defaultSub;
+      agentTitle.textContent = section.title;
+      agentDesc.textContent = section.desc;
+      activeOnlyButton.disabled = sectionKey !== "procurement";
+      activeOnlyButton.setAttribute("aria-pressed", String(state.activeOnly));
+      sourceToggleButton.setAttribute("aria-pressed", String(state.showSources));
+      renderRail();
+      renderSubtabs();
+      renderContext();
+      renderPrompts();
+      addAssistantIntro();
+      renderMessages();
+    }
+
+    function makeAnswer(prompt) {
+      const section = sections[state.section];
+      const datasets = getActiveDatasets();
+      const file = datasets.filter(item => item[0] === "FILE").length;
+      const api = datasets.filter(item => item[0] === "API").length;
+      const subLabel = section.subs ? ` > ${section.subs[state.sub].title}` : "";
+      const activeText = state.activeOnly && state.section === "procurement" ? " 현재 `활성 공고만` 조건이 켜져 있으므로 마감 전 공고와 실시간 API 조회 항목을 우선 배치합니다." : "";
+      return {
+        role: "assistant",
+        title: `${section.title}${subLabel} 기준 답변`,
+        text: `"${prompt}"에 대해서는 먼저 공개 파일데이터 ${file}건으로 기준·이력·맥락을 정리하고, 오픈 API ${api}건으로 최신 조회가 필요한 항목을 분리하는 방식이 적합합니다.${activeText} 실제 LLM 연결 시에는 Ollama의 Qwen 또는 Gemma가 이 화면의 질문과 선택 목차를 받아 답변을 생성하게 됩니다.`,
+        cards: [
+          { title: "사용자 관점", body: state.role === "company" ? "참여 가능성, 준비 서류, 유사 계약을 우선합니다." : state.role === "staff" ? "업무 판단, 출처 검증, 민원 응대를 우선합니다." : "쉬운 설명, 공개 근거, 접근 경로를 우선합니다." },
+          { title: "데이터 처리", body: api ? "API는 최신성, 파일은 분석과 설명 근거로 사용합니다." : "파일데이터 기준일을 답변에 명확히 표시합니다." },
+          { title: "다음 행동", body: "관련 데이터셋 목록, 해시태그, 추천 질문으로 탐색을 이어갑니다." }
+        ],
+        sources: datasets.slice(0, 5).map(item => `${item[0]} ${item[1]}`)
+      };
+    }
+
+    function submitQuestion(prompt) {
+      const clean = prompt.trim();
+      if (!clean) return;
+      state.messages.push({
+        role: "user",
+        title: "사용자 질문",
+        text: clean
+      });
+      state.messages.push(makeAnswer(clean));
+      renderMessages();
+      chatInput.value = "";
+      heroInput.value = "";
+    }
+
+    function getLastAssistantText() {
+      const last = [...state.messages].reverse().find(message => message.role === "assistant");
+      if (!last) return "";
+      const cards = last.cards ? last.cards.map(card => `${card.title}: ${card.body}`).join("\n") : "";
+      const sources = last.sources ? last.sources.join("\n") : "";
+      return [last.title, last.text, cards, sources ? `출처:\n${sources}` : ""].filter(Boolean).join("\n\n");
+    }
+
+    sectionRail.addEventListener("click", event => {
+      const button = event.target.closest("[data-section]");
+      if (!button) return;
+      setSection(button.dataset.section);
+    });
+
+    subtabs.addEventListener("click", event => {
+      const button = event.target.closest("[data-sub]");
+      if (!button) return;
+      setSection(state.section, button.dataset.sub);
+    });
+
+    document.querySelector(".role-switch").addEventListener("click", event => {
+      const button = event.target.closest("[data-role]");
+      if (!button) return;
+      state.role = button.dataset.role;
+      document.querySelectorAll("[data-role]").forEach(item => {
+        item.setAttribute("aria-pressed", String(item === button));
+      });
+      renderPrompts();
+    });
+
+    activeOnlyButton.addEventListener("click", () => {
+      state.activeOnly = !state.activeOnly;
+      activeOnlyButton.setAttribute("aria-pressed", String(state.activeOnly));
+      if (state.section === "procurement") {
+        addAssistantIntro();
+        renderMessages();
+      }
+    });
+
+    sourceToggleButton.addEventListener("click", () => {
+      state.showSources = !state.showSources;
+      sourceToggleButton.setAttribute("aria-pressed", String(state.showSources));
+      renderMessages();
+    });
+
+    copyAnswerButton.addEventListener("click", async () => {
+      const text = getLastAssistantText();
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyAnswerButton.textContent = "복사됨";
+        setTimeout(() => { copyAnswerButton.textContent = "답변 복사"; }, 1200);
+      } catch {
+        copyAnswerButton.textContent = "복사 불가";
+        setTimeout(() => { copyAnswerButton.textContent = "답변 복사"; }, 1200);
+      }
+    });
+
+    clearChatButton.addEventListener("click", () => {
+      addAssistantIntro();
+      renderMessages();
+      chatInput.focus();
+    });
+
+    promptStrip.addEventListener("click", event => {
+      const button = event.target.closest("[data-prompt]");
+      if (!button) return;
+      submitQuestion(button.dataset.prompt);
+    });
+
+    document.querySelectorAll("[data-quick]").forEach(button => {
+      button.addEventListener("click", () => {
+        if (button.dataset.section) setSection(button.dataset.section, button.dataset.sub);
+        submitQuestion(button.dataset.quick);
+      });
+    });
+
+    chatForm.addEventListener("submit", event => {
+      event.preventDefault();
+      submitQuestion(chatInput.value);
+    });
+
+    heroForm.addEventListener("submit", event => {
+      event.preventDefault();
+      setSection("procurement", "notice");
+      submitQuestion(heroInput.value || "입찰공고와 계약정보를 같이 찾아줘.");
+      document.querySelector(".workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    setSection("procurement", "plan");
+  </script>
+</body>
+</html>

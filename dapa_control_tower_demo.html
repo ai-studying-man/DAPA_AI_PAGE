@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAPA 획득체계 통합관제 서비스</title>
+  <link rel="stylesheet" href="./dapa_control_tower_style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">DAPA Acquisition Control Tower</p>
+      <h1>DAPA 획득체계 통합관제 서비스</h1>
+      <p class="summary">조달계획 및 조달요구부터 입찰공고, 입찰결과, 계약정보까지 연결해 획득사업 리스크를 조기에 탐지하는 AI 의사결정 서비스 초안</p>
+    </div>
+    <div class="header-actions">
+      <label class="search-label" for="projectSelect">사업 선택</label>
+      <select id="projectSelect" aria-label="사업 선택"></select>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="left-rail" aria-label="서비스 구성">
+      <div class="rail-block">
+        <h2>LLM 기능</h2>
+        <ul class="compact-list">
+          <li>획득 리스크 원인 요약</li>
+          <li>유사사업 비교 설명</li>
+          <li>공고 품질 개선 제안</li>
+          <li>회의용 1페이지 브리핑</li>
+          <li>담당자 확인 체크리스트</li>
+        </ul>
+      </div>
+
+      <div class="rail-block">
+        <h2>데이터 처리</h2>
+        <ol class="compact-list ordered">
+          <li>OpenAPI 월 단위 수집</li>
+          <li>CSV 보조 데이터 적재</li>
+          <li>품목명·업체명 정규화</li>
+          <li>공고번호 우선 연결</li>
+          <li>유사도 기반 후보 연결</li>
+          <li>리스크 점수 산출</li>
+        </ol>
+      </div>
+
+      <div class="rail-block">
+        <h2>실행 TODO</h2>
+        <div class="todo-list" id="todoList"></div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <section class="hero-panel" aria-label="위험 요약">
+        <div class="risk-gauge-wrap">
+          <div class="risk-gauge" id="riskGauge" aria-label="종합 리스크 점수">
+            <span id="riskScore">0</span>
+            <small>종합 리스크</small>
+          </div>
+        </div>
+        <div class="risk-summary">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">사업 상태</p>
+              <h2 id="projectName">-</h2>
+              <span class="type-chip" id="acquisitionType">획득유형 -</span>
+            </div>
+            <span class="risk-badge" id="riskLevel">-</span>
+          </div>
+          <p id="projectBrief" class="project-brief"></p>
+          <div class="metric-grid">
+            <div class="metric">
+              <span>일정 지연</span>
+              <strong id="scheduleRisk">0</strong>
+            </div>
+            <div class="metric">
+              <span>비용 괴리</span>
+              <strong id="costRisk">0</strong>
+            </div>
+            <div class="metric">
+              <span>경쟁 부족</span>
+              <strong id="competitionRisk">0</strong>
+            </div>
+            <div class="metric">
+              <span>이상 낙찰</span>
+              <strong id="anomalyRisk">0</strong>
+            </div>
+            <div class="metric">
+              <span>성능 관리</span>
+              <strong id="performanceRisk">0</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="획득 흐름 로드맵">
+        <div class="section-title-row">
+          <div>
+            <p class="eyebrow">Acquisition Roadmap</p>
+            <h2>조달요구부터 계약까지 연결 구조</h2>
+          </div>
+          <span class="confidence" id="matchConfidence">연결 신뢰도 -</span>
+        </div>
+        <div class="roadmap" id="roadmap"></div>
+      </section>
+
+      <section class="split-grid">
+        <section class="panel" aria-label="리스크 원인">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">Risk Drivers</p>
+              <h2>리스크 관리 원인</h2>
+            </div>
+          </div>
+          <div class="risk-bars" id="riskBars"></div>
+        </section>
+
+        <section class="panel" aria-label="AI 브리핑">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">LLM Briefing</p>
+              <h2>AI 의사결정 브리핑 초안</h2>
+            </div>
+          </div>
+          <div class="brief-box" id="llmBrief"></div>
+        </section>
+      </section>
+
+      <section class="split-grid">
+        <section class="panel" aria-label="사업관리 노하우">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">PM Know-how</p>
+              <h2>사업관리 노하우: 일정·비용·성능 영향성</h2>
+            </div>
+          </div>
+          <div class="knowhow-grid" id="knowhowGrid"></div>
+        </section>
+
+        <section class="panel" aria-label="데이터 품질 점검">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">Data Quality Monitor</p>
+              <h2>데이터 품질 점검</h2>
+            </div>
+            <span class="confidence" id="qualityScore">품질 -</span>
+          </div>
+          <div class="quality-grid" id="qualityGrid"></div>
+        </section>
+      </section>
+
+      <section class="panel" aria-label="데이터 수집 및 처리 설계">
+        <div class="section-title-row">
+          <div>
+            <p class="eyebrow">Data Pipeline</p>
+            <h2>공공데이터 수집 및 처리 설계</h2>
+          </div>
+        </div>
+        <div class="data-pipeline">
+          <div class="data-source">
+            <h3>1. 필수 OpenAPI</h3>
+            <ul>
+              <li>군수품조달정보 조달계획: 발주예정월, 대표품목명, 판단번호, 예산금액, 진행상태</li>
+              <li>군수품조달정보 입찰공고: 공고번호, 입찰명, 공고일자, 마감일시, 계약방법</li>
+              <li>군수품조달정보 입찰결과: 낙찰 여부, 참가업체, 개찰일시, 예정가격</li>
+              <li>군수품조달정보 계약정보: 계약번호, 계약명, 계약금액, 예정가격, 계약기간</li>
+            </ul>
+          </div>
+          <div class="data-source">
+            <h3>2. 보조 CSV/API</h3>
+            <ul>
+              <li>국내조달 입찰참여업체정보: 업체 참여 추세와 반복 참여 분석</li>
+              <li>국내조달 경쟁 입찰결과: 낙찰자 결정방법, 예정가격, 계약체결방법 보강</li>
+              <li>국내조달 계약정보: 계약번호, 계약금액, 수의계약 사유 보강</li>
+              <li>방산업체 지정현황: 방산 분야별 업체 풀과 공급망 후보군 분석</li>
+            </ul>
+          </div>
+          <div class="data-source">
+            <h3>3. 처리 로직</h3>
+            <ul>
+              <li>공고번호·계약번호 우선 연결, 실패 시 품목명·기관·날짜 유사도 매칭</li>
+              <li>법인명 접미어, 공백, 특수문자 제거로 업체명 표준화</li>
+              <li>발주예정월-공고일자-개찰일자-계약일자 간 기간 산출</li>
+              <li>유사 품목군 평균과 비교해 일정·비용·경쟁 리스크 산출</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="화면 구성">
+        <div class="section-title-row">
+          <div>
+            <p class="eyebrow">Screen Blueprint</p>
+            <h2>화면 구성도</h2>
+          </div>
+        </div>
+        <div class="screen-blueprint">
+          <div class="screen-zone zone-top">상단: 사업 검색, 종합 리스크, 현재 진행단계</div>
+          <div class="screen-zone zone-left">좌측: 단계별 데이터 연결 상태와 담당자 TODO</div>
+          <div class="screen-zone zone-main">중앙: 획득 로드맵, 일정·비용·성능 리스크</div>
+          <div class="screen-zone zone-right">우측: AI 원인 분석, 유사사업, 조치 권고</div>
+          <div class="screen-zone zone-bottom">하단: 원천 데이터, 연결 신뢰도, 보고서 출력</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="./dapa_control_tower_app.js"></script>
+</body>
+</html>

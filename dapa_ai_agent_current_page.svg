@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1120" viewBox="0 0 1440 1120" role="img" aria-labelledby="title desc">
+  <title id="title">방위사업청 어디까지 알고 왔니 화면 도안</title>
+  <desc id="desc">방위사업청 공개데이터 44건을 기반으로 궁금한 정보, 예상 질문, AI 답변, 사용한 공개데이터를 한 화면에 보여주는 SVG UI 시안</desc>
+  <defs>
+    <style>
+      text { font-family: 'Pretendard','Noto Sans KR','Segoe UI',Arial,sans-serif; letter-spacing: 0; }
+      .bg { fill: #f5f7fb; }
+      .panel { fill: #ffffff; stroke: #dbe3ee; stroke-width: 1; }
+      .soft { fill: #f8fafc; stroke: #e3e9f2; stroke-width: 1; }
+      .active { fill: #eaf2ff; stroke: #1557c0; stroke-width: 1.6; }
+      .ink { fill: #152238; }
+      .muted { fill: #617085; }
+      .blue { fill: #1557c0; }
+      .green { fill: #087f5b; }
+      .tag { fill: #eef3fa; stroke: #d9e2ee; stroke-width: 1; }
+      .tagText { fill: #314865; font-size: 13px; font-weight: 700; }
+      .small { font-size: 12px; }
+      .body { font-size: 14px; }
+      .label { font-size: 13px; font-weight: 800; }
+      .head { font-size: 18px; font-weight: 850; }
+      .titleText { font-size: 30px; font-weight: 850; }
+      .shadow { filter: drop-shadow(0 14px 30px rgba(18, 35, 58, .08)); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1440" height="1120"/>
+
+  <!-- Header -->
+  <g>
+    <rect x="64" y="42" width="46" height="46" rx="12" fill="#1557c0"/>
+    <path d="M87 54 L101 80 H73 Z" fill="#fff"/>
+    <text class="ink titleText" x="128" y="67">방위사업청, 어디까지 알고 왔니?</text>
+    <text class="muted body" x="128" y="96">방위사업 용어부터 조달 기회까지, 공개데이터로 쉽게 확인하세요.</text>
+
+    <text class="muted body" x="842" y="70">용어·조달·K-방산 정보를 공개데이터 근거로 쉽게 안내합니다.</text>
+  </g>
+
+  <!-- Data table of contents moved to the top. -->
+  <g class="shadow">
+    <rect class="panel" x="64" y="132" width="1312" height="184" rx="18"/>
+    <text class="ink head" x="92" y="168">무엇을 알고 싶으신가요?</text>
+    <text class="muted body" x="294" y="168">궁금한 주제를 고르면 바로 물어볼 질문이 제안됩니다.</text>
+
+    <g transform="translate(92 194)">
+      <rect class="active" x="0" y="0" width="236" height="72" rx="14"/>
+      <text class="ink label" x="18" y="28">어려운 용어 쉽게 보기</text>
+      <text class="muted small" x="18" y="52">용어, 코드, 표준, 규격</text>
+
+      <rect class="soft" x="252" y="0" width="236" height="72" rx="14"/>
+      <text class="ink label" x="270" y="28">법령·민원 자료 찾기</text>
+      <text class="muted small" x="270" y="52">법령, FAQ, 공개자료</text>
+
+      <rect class="soft" x="504" y="0" width="236" height="72" rx="14"/>
+      <text class="ink label" x="522" y="28">우리 회사 조달 기회</text>
+      <text class="muted small" x="522" y="52">계획, 공고, 결과, 계약</text>
+
+      <rect class="soft" x="756" y="0" width="236" height="72" rx="14"/>
+      <text class="ink label" x="774" y="28">국내 K-방산 흐름</text>
+      <text class="muted small" x="774" y="52">기업, 기술, 사업 현황</text>
+
+      <rect class="soft" x="1008" y="0" width="236" height="72" rx="14"/>
+      <text class="ink label" x="1026" y="28">해외 진출 기회</text>
+      <text class="muted small" x="1026" y="52">수출, 해외조달, 시장</text>
+    </g>
+
+    <g transform="translate(92 280)">
+      <rect fill="#1557c0" x="0" y="0" width="104" height="28" rx="14"/>
+      <text fill="#fff" font-size="13" font-weight="800" x="31" y="19">용어</text>
+      <rect class="tag" x="116" y="0" width="104" height="28" rx="14"/>
+      <text class="tagText" x="148" y="19">규격</text>
+      <rect class="tag" x="232" y="0" width="104" height="28" rx="14"/>
+      <text class="tagText" x="258" y="19">코드</text>
+      <rect class="tag" x="348" y="0" width="112" height="28" rx="14"/>
+      <text class="tagText" x="373" y="19">표준품목</text>
+      <text class="muted small" x="486" y="19">주제를 클릭하면 많이 묻는 질문이 바뀌고, 질문을 누르면 중앙에 답변이 표시됩니다.</text>
+    </g>
+  </g>
+
+  <!-- Main chat and analysis. -->
+  <g class="shadow">
+    <rect class="panel" x="64" y="342" width="850" height="686" rx="18"/>
+    <rect fill="#fbfcfe" x="65" y="343" width="848" height="58" rx="18"/>
+    <text class="ink head" x="94" y="379">AI 답변</text>
+    <text class="muted body" x="240" y="379">데이터셋을 결합해 답변하고, 근거를 함께 보여줍니다.</text>
+
+    <g transform="translate(94 428)">
+      <rect fill="#eef3fa" x="0" y="0" width="612" height="62" rx="18"/>
+      <text class="ink body" x="24" y="25">국방통합 용어사전과 방위사업청 용어사전에서</text>
+      <text class="ink body" x="24" y="47">‘무기체계’와 관련 규격 정보를 쉽게 설명해줘.</text>
+    </g>
+
+    <g transform="translate(94 520)">
+      <circle cx="20" cy="20" r="20" fill="#1557c0"/>
+      <text fill="#fff" font-size="13" font-weight="850" x="11" y="25">AI</text>
+      <rect fill="#fff" stroke="#dbe3ee" x="54" y="0" width="726" height="284" rx="18"/>
+
+      <text class="ink label" x="78" y="34">한눈에 보는 답변</text>
+      <text class="muted body" x="78" y="68">1. 용어사전에서 같은 용어의 정의와 사용 맥락을 찾습니다.</text>
+      <text class="muted body" x="78" y="94">2. 국방통합 용어와 방위사업청 용어를 비교해 쉽게 풉니다.</text>
+      <text class="muted body" x="78" y="120">3. 관련 규격·코드 데이터가 있으면 함께 연결해 설명합니다.</text>
+
+      <text class="ink label" x="78" y="154">답변에 사용한 공개데이터</text>
+      <rect fill="#eaf2ff" stroke="#bdd7ff" x="78" y="168" width="174" height="32" rx="10"/>
+      <text class="blue small" x="96" y="189">국방통합 용어사전</text>
+      <rect fill="#eaf2ff" stroke="#bdd7ff" x="264" y="168" width="174" height="32" rx="10"/>
+      <text class="blue small" x="282" y="189">방위사업청 용어사전</text>
+      <rect fill="#eefbf5" stroke="#bce3d4" x="450" y="168" width="174" height="32" rx="10"/>
+      <text class="green small" x="468" y="189">최신 규격·코드 조회</text>
+
+      <rect fill="#f8fafc" stroke="#e3e9f2" x="78" y="222" width="152" height="52" rx="12"/>
+      <text class="blue label" x="108" y="244">용어 확인</text>
+      <text class="muted small" x="96" y="264">정의와 맥락 파악</text>
+      <path d="M242 248 H282" stroke="#9fb3cc" stroke-width="2"/>
+      <path d="M282 248 l-8 -6 v12 z" fill="#9fb3cc"/>
+
+      <rect fill="#f8fafc" stroke="#e3e9f2" x="294" y="222" width="152" height="52" rx="12"/>
+      <text class="blue label" x="314" y="244">관련 규격 찾기</text>
+      <text class="muted small" x="312" y="264">표준·코드 확인</text>
+      <path d="M458 248 H498" stroke="#9fb3cc" stroke-width="2"/>
+      <path d="M498 248 l-8 -6 v12 z" fill="#9fb3cc"/>
+
+      <rect fill="#f8fafc" stroke="#e3e9f2" x="510" y="222" width="152" height="52" rx="12"/>
+      <text class="blue label" x="526" y="244">쉬운 말로 바꾸기</text>
+      <text class="muted small" x="528" y="264">일반 문장 변환</text>
+    </g>
+
+    <g transform="translate(94 824)">
+      <rect fill="#f8fafc" stroke="#e3e9f2" x="0" y="0" width="780" height="70" rx="14"/>
+      <text class="ink label" x="22" y="28">왜 의미가 있나요?</text>
+      <text class="muted body" x="22" y="52">어려운 방위사업 정보를 누구나 이해할 수 있게 바꿉니다.</text>
+    </g>
+
+    <g transform="translate(94 918)">
+      <rect fill="#fff" stroke="#cfd8e6" stroke-width="1.4" x="0" y="0" width="780" height="84" rx="24"/>
+      <text class="muted body" x="24" y="34">궁금한 내용을 입력해보세요.</text>
+      <text class="muted small" x="24" y="58">예: 이 용어의 뜻과 관련 국방규격을 함께 알려줘.</text>
+      <rect fill="#1557c0" x="694" y="42" width="62" height="32" rx="16"/>
+      <text fill="#fff" font-size="13" font-weight="850" x="716" y="63">묻기</text>
+    </g>
+  </g>
+
+  <!-- Question guide and keywords. -->
+  <g class="shadow">
+    <rect class="panel" x="944" y="342" width="432" height="686" rx="18"/>
+    <text class="ink head" x="974" y="379">많이 묻는 질문</text>
+    <text class="muted body" x="974" y="406">선택한 주제에 맞춰 질문이 바뀝니다.</text>
+
+    <g transform="translate(974 430)">
+      <rect class="active" x="0" y="0" width="372" height="72" rx="14"/>
+      <text class="blue label" x="18" y="25">어려운 용어 쉽게 보기 선택됨</text>
+      <text class="muted small" x="18" y="48">질문을 누르면 중앙 AI 답변으로 표시됩니다.</text>
+
+      <rect class="soft" x="0" y="92" width="372" height="62" rx="14"/>
+      <text class="ink body" x="18" y="118">무기체계가 정확히 뭔가요?</text>
+      <text class="muted small" x="18" y="140">국방통합 용어사전 + 방위사업청 용어사전</text>
+
+      <rect class="soft" x="0" y="170" width="372" height="62" rx="14"/>
+      <text class="ink body" x="18" y="196">이 품목의 코드와 규격을 확인하고 싶어요.</text>
+      <text class="muted small" x="18" y="218">군수품 목록 + 국방규격 공개 정보</text>
+
+      <rect class="soft" x="0" y="248" width="372" height="62" rx="14"/>
+      <text class="ink body" x="18" y="274">방산 입문자가 꼭 알아야 할 용어는?</text>
+      <text class="muted small" x="18" y="296">용어사전 + 국방표준종합서비스</text>
+
+      <rect class="soft" x="0" y="326" width="372" height="62" rx="14"/>
+      <text class="ink body" x="18" y="352">헷갈리는 방위사업 용어를 비교해줘.</text>
+      <text class="muted small" x="18" y="374">국방통합 용어 + 방위사업청 용어</text>
+
+      <rect class="soft" x="0" y="404" width="372" height="62" rx="14"/>
+      <text class="ink body" x="18" y="430">계약서 속 어려운 표현을 쉽게 바꿔줘.</text>
+      <text class="muted small" x="18" y="452">용어사전 + 조달 코드 조회 API</text>
+    </g>
+
+    <line x1="974" y1="888" x2="1346" y2="888" stroke="#e1e7f0"/>
+
+    <text class="ink head" x="974" y="926">관련 키워드</text>
+    <g transform="translate(974 950)">
+      <rect class="tag" x="0" y="0" width="132" height="32" rx="16"/>
+      <text class="tagText" x="18" y="21">#방위사업용어</text>
+      <rect class="tag" x="144" y="0" width="94" height="32" rx="16"/>
+      <text class="tagText" x="162" y="21">#국방규격</text>
+      <rect class="tag" x="250" y="0" width="94" height="32" rx="16"/>
+      <text class="tagText" x="268" y="21">#품목코드</text>
+
+      <rect class="tag" x="0" y="44" width="94" height="32" rx="16"/>
+      <text class="tagText" x="18" y="65">#용어사전</text>
+      <rect class="tag" x="106" y="44" width="110" height="32" rx="16"/>
+      <text class="tagText" x="124" y="65">#표준품목</text>
+      <rect class="tag" x="228" y="44" width="100" height="32" rx="16"/>
+      <text class="tagText" x="246" y="65">#K방산</text>
+    </g>
+  </g>
+</svg>

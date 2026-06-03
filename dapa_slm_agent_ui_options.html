@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAPA SLM Agent UI Options</title>
+  <link rel="stylesheet" href="./dapa_slm_agent_ui_options.css">
+</head>
+<body>
+  <main>
+    <section class="screen option-one" id="option1">
+      <header class="topbar">
+        <div>
+          <p class="kicker">Option 1 · Control Tower Agent</p>
+          <h1>획득체계 통합관제 대시보드</h1>
+        </div>
+        <div class="agent-pill">SLM Agent: 현재 단계와 위험을 자동 요약</div>
+      </header>
+
+      <section class="hero-band">
+        <div>
+          <p class="stage-label">현재 사업관리 단계</p>
+          <h2>입찰공고 · 국내구매</h2>
+          <p class="hero-copy">전술통신장비 성능개량 부품 조달은 공고 전 경쟁성 확인이 필요한 상태입니다. SLM 에이전트가 조달계획, 입찰공고, 과거 입찰결과, 계약정보를 연결해 지금 챙길 일을 제시합니다.</p>
+          <div class="cta-row">
+            <button>AI 브리핑 보기</button>
+            <button class="ghost">근거 데이터 확인</button>
+          </div>
+        </div>
+        <div class="risk-orbit">
+          <div class="big-score">82</div>
+          <span>종합 리스크 높음</span>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="card roadmap-card">
+          <div class="card-head">
+            <p class="kicker">Acquisition Roadmap</p>
+            <h3>조달요구 → 공고 → 결과 → 계약</h3>
+          </div>
+          <div class="roadmap">
+            <div class="step done">조달계획<br><strong>예산 38.5억</strong></div>
+            <div class="step active">입찰공고<br><strong>경쟁성 점검</strong></div>
+            <div class="step">입찰결과<br><strong>유찰 감시</strong></div>
+            <div class="step">계약정보<br><strong>지연 예측</strong></div>
+          </div>
+        </article>
+
+        <article class="card metrics-card">
+          <div class="card-head">
+            <p class="kicker">Risk Signals</p>
+            <h3>일정·비용·성능</h3>
+          </div>
+          <div class="metric-row"><span>일정</span><div><i style="width:86%"></i></div><b>86</b></div>
+          <div class="metric-row"><span>비용</span><div><i style="width:72%"></i></div><b>72</b></div>
+          <div class="metric-row"><span>성능</span><div><i style="width:78%"></i></div><b>78</b></div>
+          <div class="metric-row"><span>경쟁</span><div><i style="width:91%"></i></div><b>91</b></div>
+        </article>
+
+        <article class="card agent-card">
+          <div class="card-head">
+            <p class="kicker">Agent Recommendation</p>
+            <h3>지금 챙길 일</h3>
+          </div>
+          <ul class="checklist">
+            <li>참가자격 조건이 과도하게 좁은지 확인</li>
+            <li>유사 품목의 최근 유찰 이력 확인</li>
+            <li>방산업체 지정현황에서 대체업체 후보 확인</li>
+            <li>국가계약법상 제한경쟁 사유 점검</li>
+          </ul>
+        </article>
+      </section>
+    </section>
+
+    <section class="screen option-two" id="option2">
+      <header class="topbar">
+        <div>
+          <p class="kicker">Option 2 · Stage Workflow Agent</p>
+          <h1>획득유형별 단계 클릭 서비스</h1>
+        </div>
+        <div class="agent-pill">SLM Agent: 선택한 단계의 해야 할 일과 규정 제시</div>
+      </header>
+
+      <section class="type-tabs">
+        <button class="selected">국내구매</button>
+        <button>국외구매</button>
+        <button>연구개발</button>
+        <button>양산</button>
+      </section>
+
+      <section class="workflow-layout">
+        <div class="workflow-map">
+          <div class="lane-title">국내구매 업무 흐름</div>
+          <div class="node complete"><span>1</span><strong>조달계획</strong><small>발주예정월·예산 확인</small></div>
+          <div class="node selected"><span>2</span><strong>입찰공고</strong><small>참가자격·마감기간 점검</small></div>
+          <div class="node"><span>3</span><strong>입찰결과</strong><small>참여업체·유찰 확인</small></div>
+          <div class="node"><span>4</span><strong>계약정보</strong><small>계약금액·계약기간 확인</small></div>
+        </div>
+
+        <aside class="stage-detail">
+          <p class="kicker">Selected Stage</p>
+          <h2>입찰공고 단계</h2>
+          <div class="stage-score">
+            <span>단계 위험</span>
+            <b>주의 72</b>
+          </div>
+          <h3>SLM이 제시하는 체크리스트</h3>
+          <ol>
+            <li>공고번호와 판단번호 연결 여부 확인</li>
+            <li>제한경쟁 조건의 근거와 필요성 확인</li>
+            <li>유사 품목 평균 참여업체 수와 비교</li>
+            <li>마감기간이 유사 공고보다 짧은지 확인</li>
+          </ol>
+          <div class="law-box">
+            <strong>참고 규정</strong>
+            <span>국가계약법 제7조, 국가계약법 시행령 제한경쟁·수의계약 관련 규정, 국방전자조달시스템 관리규정</span>
+          </div>
+        </aside>
+      </section>
+    </section>
+
+    <section class="screen option-three" id="option3">
+      <header class="topbar">
+        <div>
+          <p class="kicker">Option 3 · PM Know-how Agent</p>
+          <h1>사업관리 노하우 맵</h1>
+        </div>
+        <div class="agent-pill">SLM Agent: 과거 유사사업 패턴으로 노하우 제시</div>
+      </header>
+
+      <section class="knowhow-hero">
+        <div>
+          <p class="stage-label">유사사업 기반 분석</p>
+          <h2>경험이 부족해도 일정·비용·성능 영향성을 먼저 본다</h2>
+          <p class="hero-copy">SLM 에이전트는 유사 품목, 계약방법, 업체 참여 이력, 낙찰률, 계약기간을 비교해 이번 사업의 사업관리 노하우를 카드로 제시합니다.</p>
+        </div>
+        <div class="mini-summary">
+          <span>유사사업 12건</span>
+          <b>핵심 교훈 5개</b>
+        </div>
+      </section>
+
+      <section class="knowhow-grid">
+        <article class="know-card high">
+          <p>일정 관리</p>
+          <h3>지연 영향 높음 · 86</h3>
+          <div class="bar"><i style="width:86%"></i></div>
+          <ul>
+            <li>공고 전 품목명세서 확정 여부 확인</li>
+            <li>유사사업 평균 계약기간보다 24일 길 가능성</li>
+          </ul>
+        </article>
+
+        <article class="know-card warn">
+          <p>비용 관리</p>
+          <h3>주의 · 72</h3>
+          <div class="bar"><i style="width:72%"></i></div>
+          <ul>
+            <li>예정가격 산정 근거 재확인</li>
+            <li>최근 유사 계약 낙찰률 대비 +6.4%p</li>
+          </ul>
+        </article>
+
+        <article class="know-card high">
+          <p>성능 관리</p>
+          <h3>영향 높음 · 78</h3>
+          <div class="bar"><i style="width:78%"></i></div>
+          <ul>
+            <li>필수 성능과 권장 성능 분리</li>
+            <li>국방표준 규격과 품목명세서 매칭 필요</li>
+          </ul>
+        </article>
+
+        <article class="card lessons">
+          <p class="kicker">Lessons Learned</p>
+          <h3>SLM 사업관리 노하우</h3>
+          <p>유사사업에서 반복된 위험은 “참가자격 제한 → 참여업체 감소 → 유찰 또는 계약 지연” 순서로 나타났습니다. 이번 사업은 입찰공고 전 경쟁성 점검을 완료해야 합니다.</p>
+          <div class="source-strip">근거: 조달계획 + 입찰공고 + 입찰결과 + 계약정보 + 입찰참여업체정보</div>
+        </article>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
