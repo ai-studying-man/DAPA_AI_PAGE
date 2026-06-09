@@ -22,8 +22,29 @@ type ModelMetadata = {
   readonly mode?: unknown;
 };
 
-function isModelMetadata(value: unknown): value is ModelMetadata {
+function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function isModelMetadata(value: unknown): value is ModelMetadata {
+  return isRecord(value);
+}
+
+function isSourceType(value: unknown): value is Source["type"] {
+  return value === "FILE" || value === "API" || value === "SECTION" || value === "HOMEPAGE";
+}
+
+export function isSource(value: unknown): value is Source {
+  if (!isRecord(value)) return false;
+  return (
+    isSourceType(value.type) &&
+    typeof value.title === "string" &&
+    typeof value.source === "string" &&
+    typeof value.score === "number" &&
+    (typeof value.sourceUrl === "undefined" || typeof value.sourceUrl === "string") &&
+    (typeof value.section === "undefined" || typeof value.section === "string") &&
+    (typeof value.modified === "undefined" || typeof value.modified === "string")
+  );
 }
 
 export function modelLabel(value: unknown) {

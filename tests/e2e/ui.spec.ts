@@ -5,7 +5,7 @@ test.describe("public landing", () => {
     await page.goto("/");
 
     await expect(page.getByRole("heading", { name: "AI와 함께, 더 스마트한 방위사업청" })).toBeVisible();
-    await expect(page.getByRole("navigation", { name: "주요 메뉴" }).getByRole("link", { name: "AI 통합검색" })).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "주요 메뉴" }).getByRole("link", { name: "AI 통합검색" })).toHaveAttribute("href", "/ai-search");
     await expect(page.getByRole("textbox", { name: "검색어 입력" })).toBeVisible();
     await expect(page.getByRole("button", { name: "방산중소기업 지원" })).toBeVisible();
     await expect(page.getByRole("complementary", { name: "AI 맞춤 추천" })).toContainText("중소기업 지원제도");
@@ -33,18 +33,94 @@ test.describe("public landing", () => {
   });
 
   test("runs a quick query and shows answer provenance", async ({ page }) => {
+    await page.route("**/api/chat", async (route) => {
+      await route.fulfill({
+        contentType: "application/json",
+        json: {
+          answer: "질문 이해\n방산 중소기업 지원 절차를 찾는 질문입니다.\n\nReasoning/근거 판단\n공식 홈페이지와 데이터셋 근거를 우선 사용했습니다.\n\n답변\n방위사업청 국내조달 조달계획과 방산 중소기업 지원 근거를 함께 확인해야 합니다.",
+          model: { provider: "ollama", name: "qwen3.5:4b", mode: "fallback" },
+          sources: [
+            {
+              type: "HOMEPAGE",
+              title: "방산 중소기업과 업체 지원",
+              source: "https://www.dapa.go.kr/dapa/index.do",
+              sourceUrl: "https://www.dapa.go.kr/dapa/index.do",
+              section: "중소기업 지원",
+              score: 0.94
+            },
+            {
+              type: "FILE",
+              title: "방위사업청 국내조달 조달계획",
+              source: "국내조달 조달계획 데이터셋",
+              score: 0.91
+            }
+          ]
+        }
+      });
+    });
     await page.goto("/");
 
     await page.getByRole("button", { name: "방산중소기업 지원" }).click();
 
-    const resultPanel = page.locator(".answerPanel");
-    await expect(resultPanel).toContainText("AI 검색 결과");
-    await expect(resultPanel).toContainText("모델 ollama · qwen3.5:4b");
-    await expect(resultPanel).toContainText("질문 이해");
-    await expect(resultPanel).toContainText("Reasoning/근거 판단");
-    await expect(resultPanel).toContainText("방위사업청 국내조달 조달계획");
-    await expect(resultPanel).toContainText(/홈페이지 \d+ · FILE \d+ · API \d+/);
-    await expect(resultPanel.getByRole("link", { name: /방산 중소기업과 업체/ })).toHaveAttribute("href", /https:\/\/www\.dapa\.go\.kr/);
+    await expect(page).toHaveURL(/\/ai-search\?/);
+    const chatbot = page.getByRole("region", { name: "AI 챗봇" });
+    await expect(chatbot).toContainText("질문 이해");
+    await expect(chatbot).toContainText("Reasoning/근거 판단");
+    await expect(chatbot).toContainText("방위사업청 국내조달 조달계획");
+    await expect(chatbot).toContainText(/홈페이지 \d+ · FILE \d+ · API \d+/);
+    await expect(chatbot.getByRole("link", { name: /방산 중소기업과 업체/ })).toHaveAttribute("href", /https:\/\/www\.dapa\.go\.kr/);
+  });
+
+  test("opens a single chatbot UI from AI integrated search", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("navigation", { name: "주요 메뉴" }).getByRole("link", { name: "AI 통합검색" }).click();
+
+    await expect(page).toHaveURL(/\/ai-search$/);
+    const chatbot = page.getByRole("region", { name: "AI 챗봇" });
+    await expect(chatbot).toBeVisible();
+    await expect(page.getByRole("main", { name: "방위사업청 생성형 AI 포털" })).toContainText("DAPA RAG MVP");
+    await expect(page.getByRole("main", { name: "방위사업청 생성형 AI 포털" })).toContainText("Graph RAG 확장 준비");
+    await expect(chatbot.getByRole("textbox", { name: "AI 챗봇 질문" })).toBeVisible();
+    await expect(chatbot.getByRole("button", { name: "방산기업 진입 절차" })).toBeVisible();
+  });
+
+  test("keeps chatbot conversation history and shows generating state", async ({ page }) => {
+    let requestCount = 0;
+    await page.route("**/api/chat", async (route) => {
+      requestCount += 1;
+      if (requestCount === 1) await new Promise((resolve) => setTimeout(resolve, 500));
+      await route.fulfill({
+        contentType: "application/json",
+        json: {
+          answer: `답변\n${requestCount}번째 질문에 대한 출처 기반 답변입니다.`,
+          model: { provider: "ollama", name: "qwen3.5:4b", mode: "fallback" },
+          sources: [
+            {
+              type: "HOMEPAGE",
+              title: "방위사업청 공식 홈페이지",
+              source: "https://www.dapa.go.kr/dapa/index.do",
+              sourceUrl: "https://www.dapa.go.kr/dapa/index.do",
+              section: "AI 통합검색",
+              score: 0.9
+            }
+          ]
+        }
+      });
+    });
+
+    await page.goto("/ai-search");
+    await page.getByRole("textbox", { name: "AI 챗봇 질문" }).fill("최근 입찰공고 알려줘");
+    await page.getByRole("button", { name: "질문하기" }).click();
+    await expect(page.getByText("답변 생성 중")).toBeVisible();
+    await expect(page.getByRole("log", { name: "AI 대화 내용" })).toContainText("최근 입찰공고 알려줘");
+    await expect(page.getByRole("log", { name: "AI 대화 내용" })).toContainText("1번째 질문");
+
+    await page.getByRole("textbox", { name: "AI 챗봇 질문" }).fill("방산수출 지원사업도 알려줘");
+    await page.getByRole("button", { name: "질문하기" }).click();
+    await expect(page.getByRole("log", { name: "AI 대화 내용" })).toContainText("최근 입찰공고 알려줘");
+    await expect(page.getByRole("log", { name: "AI 대화 내용" })).toContainText("방산수출 지원사업도 알려줘");
+    await expect(page.getByRole("log", { name: "AI 대화 내용" })).toContainText("2번째 질문");
   });
 
   test("opens the source reference panel without requiring search execution", async ({ page }) => {
@@ -69,10 +145,8 @@ test.describe("public landing", () => {
 
     await sectionIndex.getByRole("button", { name: "AI로 검색" }).nth(4).click();
 
-    const resultPanel = page.locator(".answerPanel");
-    await expect(resultPanel).toContainText("공식 홈페이지의 방위사업청 SNS 영역");
-    await expect(resultPanel).toContainText("세계가 주목하는 K-방산");
-    await expect(resultPanel.getByRole("list", { name: "AI 답변 출처" })).toContainText("공식 홈페이지");
+    await expect(page).toHaveURL(/\/ai-search\?/);
+    await expect(page.getByRole("main", { name: "방위사업청 생성형 AI 포털" })).toBeVisible();
   });
 
   test("keeps the mobile landing within the viewport", async ({ page }) => {

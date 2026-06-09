@@ -1,11 +1,10 @@
 "use client";
 
-import { type FormEvent, useMemo, useRef, useState } from "react";
-import { type ChatResponse, modelLabel, type Source, sourceTypeLabel } from "@/lib/chat-response-view";
+import { type FormEvent, useState } from "react";
 import { dapaHomepageSections } from "@/lib/dapa-homepage-sections";
 import { dapaOfficialNavMenus, type DapaNavMenu } from "@/lib/dapa-nav-data";
 
-const navItems = [{ title: "AI 통합검색", href: "#ai-search" }, ...dapaOfficialNavMenus] as const;
+const navItems = [{ title: "AI 통합검색", href: "/ai-search" }, ...dapaOfficialNavMenus] as const;
 const searchChips = [
   { label: "방산중소기업 지원", section: "중소기업 지원", query: "방산 중소기업이 확인해야 할 조달, 입찰, 계약 정보를 알려줘" },
   { label: "계약절차", section: "계약절차", query: "방위사업청 계약절차와 조달계획에서 먼저 볼 항목을 알려줘" },
@@ -45,60 +44,20 @@ const sourceGroups = [
 
 export default function Home() {
   const [message, setMessage] = useState("");
-  const [section, setSection] = useState("");
   const [activeMenu, setActiveMenu] = useState<DapaNavMenu | null>(dapaOfficialNavMenus[0] ?? null);
-  const [answer, setAnswer] = useState("");
-  const [sources, setSources] = useState<Source[]>([]);
-  const [model, setModel] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [showSources, setShowSources] = useState(false);
-  const requestIdRef = useRef(0);
-  const sourceSummary = useMemo(() => ({
-    homepage: sources.filter((source) => source.type === "HOMEPAGE").length,
-    file: sources.filter((source) => source.type === "FILE").length,
-    api: sources.filter((source) => source.type === "API").length
-  }), [sources]);
 
-  async function submit(nextMessage = message, nextSection = section) {
+  function openAiPortal(nextMessage = message, nextSection = "") {
+    const params = new URLSearchParams();
     const trimmed = nextMessage.trim();
-    if (!trimmed) return;
-    const requestId = requestIdRef.current + 1;
-    requestIdRef.current = requestId;
-    setMessage(trimmed);
-    setSection(nextSection);
-    setLoading(true);
-    setError("");
-    setAnswer("");
-    setSources([]);
-    setModel("");
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message: trimmed, section: nextSection })
-      });
-      const data = (await response.json()) as ChatResponse;
-      if (requestId !== requestIdRef.current) return;
-      if (!response.ok) {
-        const messageText = typeof data.message === "string" ? data.message : data.error;
-        throw new Error(typeof messageText === "string" ? messageText : "응답 생성에 실패했습니다.");
-      }
-      if (typeof data.answer !== "string") throw new Error("응답 형식이 올바르지 않습니다.");
-      setAnswer(data.answer);
-      setSources(Array.isArray(data.sources) ? (data.sources as Source[]) : []);
-      setModel(modelLabel(data.model));
-    } catch (err) {
-      if (requestId !== requestIdRef.current) return;
-      setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.");
-    } finally {
-      if (requestId === requestIdRef.current) setLoading(false);
-    }
+    if (trimmed) params.set("q", trimmed);
+    if (nextSection) params.set("section", nextSection);
+    window.location.assign(params.size > 0 ? `/ai-search?${params.toString()}` : "/ai-search");
   }
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
-    void submit();
+    openAiPortal();
   }
 
   return (
@@ -172,47 +131,29 @@ export default function Home() {
           <h1>AI와 함께, 더 스마트한 방위사업청</h1>
           <p>AI가 궁금증을 해결하고, 필요한 정보를 빠르게 찾아드립니다.</p>
           <form className="aiSearchBox" onSubmit={onSubmit}>
-            <button className="aiMark" type="button" onClick={() => setShowSources(true)} aria-label="검색 근거 보기">Ai</button>
+            <button className="aiMark" type="button" onClick={() => openAiPortal()} aria-label="AI 챗봇 열기">Ai</button>
             <input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="궁금한 내용을 자연어로 질문해보세요." aria-label="검색어 입력" />
             <button className="voiceButton" type="button" onClick={() => setShowSources(true)} aria-label="데이터셋 보기">i</button>
-            <button className="searchButton" type="submit" disabled={loading}>{loading ? "검색중" : "검색"}</button>
+            <button className="searchButton" type="submit">검색</button>
           </form>
           <div className="suggestedSearches" aria-label="추천 검색어">
             <strong>추천 검색어</strong>
-            {searchChips.map((chip) => <button key={chip.label} type="button" disabled={loading} onClick={() => void submit(chip.query, chip.section)}>{chip.label}</button>)}
+            {searchChips.map((chip) => <button key={chip.label} type="button" onClick={() => openAiPortal(chip.query, chip.section)}>{chip.label}</button>)}
           </div>
         </div>
         <aside className="aiRecommendationPanel" aria-label="AI 맞춤 추천">
           <div className="panelTitle"><h2>AI 맞춤 추천</h2><button type="button">나의 관심 설정</button></div>
           {aiRecommendations.map((item, index) => (
-            <button className="recommendationItem" key={item.title} type="button" disabled={loading} onClick={() => void submit(item.query, item.title)}>
+            <button className="recommendationItem" key={item.title} type="button" onClick={() => openAiPortal(item.query, item.title)}>
               <span>{index + 1}</span><strong>{item.title}</strong><small>{item.text}</small>
             </button>
           ))}
         </aside>
         <aside className="rightPromos" aria-label="홍보 정보">
-          <article className="kDefensePromo"><span>K-방산, 세계로 미래로</span><h2>K-방산</h2><button type="button" onClick={() => void submit("K-방산과 방산수출입 지원 정보를 알려줘", "K-방산")}>자세히 보기</button></article>
-          <article className="hirePromo"><h2>신규 직원 채용 안내</h2><p>방위사업청과 함께 국가 안보를 책임질 인재를 찾습니다.</p><button type="button" onClick={() => void submit("신규 직원과 예비 인력이 볼 채용 관련 메뉴를 알려줘", "군·예비인력")}>채용공고 보기</button></article>
+          <article className="kDefensePromo"><span>K-방산, 세계로 미래로</span><h2>K-방산</h2><button type="button" onClick={() => openAiPortal("K-방산과 방산수출입 지원 정보를 알려줘", "K-방산")}>자세히 보기</button></article>
+          <article className="hirePromo"><h2>신규 직원 채용 안내</h2><p>방위사업청과 함께 국가 안보를 책임질 인재를 찾습니다.</p><button type="button" onClick={() => openAiPortal("신규 직원과 예비 인력이 볼 채용 관련 메뉴를 알려줘", "군·예비인력")}>채용공고 보기</button></article>
         </aside>
       </section>
-
-      {(loading || error || answer) && (
-        <section className="answerPanel" aria-live="polite">
-          <div><strong>{loading ? "AI가 공개 데이터를 검색하고 있습니다." : "AI 검색 결과"}</strong><span>모델 {model || "Ollama"} · 홈페이지 {sourceSummary.homepage} · FILE {sourceSummary.file} · API {sourceSummary.api}</span></div>
-          {error ? <p className="errorText">{error}</p> : <p>{answer}</p>}
-          {sources.length > 0 && (
-            <ul className="answerSources" aria-label="AI 답변 출처">
-              {sources.slice(0, 5).map((source) => (
-                <li key={`${source.type}-${source.title}-${source.score}`}>
-                  <b>{sourceTypeLabel(source.type)}</b>
-                  {source.sourceUrl ? <a className="sourceTitleLink" href={source.sourceUrl} target="_blank" rel="noreferrer">{source.title}</a> : <span>{source.title}</span>}
-                  <small>{source.section ? `${source.section} · ` : ""}{source.sourceUrl ? <a href={source.sourceUrl} target="_blank" rel="noreferrer">{source.source}</a> : source.source}</small>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      )}
 
       {showSources && (
         <section className="sourcePanel" aria-label="사용 데이터 안내">
@@ -224,14 +165,14 @@ export default function Home() {
       )}
 
       <section className="lowerGrid" id="official-info" aria-label="방위사업청 공식 정보">
-        {audienceCards.map((card) => <article className="audienceCard" key={card.title}><h2>{card.title}</h2><p>{card.text}</p><button type="button" onClick={() => void submit(card.query, card.title)}>{card.action}</button></article>)}
+        {audienceCards.map((card) => <article className="audienceCard" key={card.title}><h2>{card.title}</h2><p>{card.text}</p><button type="button" onClick={() => openAiPortal(card.query, card.title)}>{card.action}</button></article>)}
         <article className="noticeCard">
           <div className="cardHead"><h2>공지사항</h2><a href="https://www.dapa.go.kr/dapa/index.do?menuSeq=3031" target="_blank" rel="noreferrer">+</a></div>
-          {notices.map((notice) => <button key={notice.title} type="button" onClick={() => void submit(`${notice.title} 내용을 요약해줘`, "공지사항")}><span>{notice.title}</span><time>{notice.date}</time></button>)}
+          {notices.map((notice) => <button key={notice.title} type="button" onClick={() => openAiPortal(`${notice.title} 내용을 요약해줘`, "공지사항")}><span>{notice.title}</span><time>{notice.date}</time></button>)}
         </article>
         <article className="quickCard">
           <h2>빠른 서비스</h2>
-          <div>{quickServices.map((service) => <button key={service} type="button" onClick={() => void submit(`${service} 관련 공개 정보와 원문 경로를 알려줘`, service)}><span aria-hidden="true" />{service}</button>)}</div>
+          <div>{quickServices.map((service) => <button key={service} type="button" onClick={() => openAiPortal(`${service} 관련 공개 정보와 원문 경로를 알려줘`, service)}><span aria-hidden="true" />{service}</button>)}</div>
         </article>
       </section>
 
@@ -249,7 +190,7 @@ export default function Home() {
               <ul>
                 {section.items.map((item) => <li key={item.title}>{item.title}</li>)}
               </ul>
-              <button type="button" onClick={() => void submit(section.query, section.title)}>AI로 검색</button>
+              <button type="button" onClick={() => openAiPortal(section.query, section.title)}>AI로 검색</button>
             </article>
           ))}
         </div>
